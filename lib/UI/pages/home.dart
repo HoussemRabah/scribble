@@ -42,12 +42,13 @@ class LoadingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CentreScreenLayout(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "SCRIBBLE GAME",
             style: textStyleTitle,
           ),
+          SizedBox(height: 50.0),
           LoadingBar(process: state.process),
         ],
       ),
@@ -62,12 +63,13 @@ class WriteView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CentreScreenLayout(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "SCRIBBLE GAME",
             style: textStyleTitle,
           ),
+          SizedBox(height: 50.0),
           Container(
             padding: EdgeInsets.all(8.0),
             margin: EdgeInsets.all(8.0),
@@ -80,9 +82,15 @@ class WriteView extends StatelessWidget {
                   bottom: BorderSide(color: colorMain),
                 )),
             child: TextField(
+              onSubmitted: (username) {
+                context
+                    .read<UserBloc>()
+                    .add(UserEventNewUser(username: username));
+              },
               style: textStyleBig,
+              textAlign: TextAlign.center,
               decoration: InputDecoration(
-                  border: InputBorder.none, hintText: "your name"),
+                  border: InputBorder.none, hintText: "NICKNAME"),
             ),
           )
         ],
