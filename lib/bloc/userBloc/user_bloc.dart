@@ -14,7 +14,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   UserCredential? user;
   String? userName;
 
-  UserBloc() : super(UserInitial()) {
+  UserBloc() : super(UserStateLoading(process:0.0)) {
     on<UserEvent>((event, emit) async {
       if (event is UserEventInit) {
         emit(UserStateLoading(process: 0.1));
