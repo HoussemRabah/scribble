@@ -42,6 +42,7 @@ class LoadingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CentreScreenLayout(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             "SCRIBBLE GAME",
@@ -61,12 +62,15 @@ class WriteView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CentreScreenLayout(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             "SCRIBBLE GAME",
             style: textStyleTitle,
           ),
           Container(
+            padding: EdgeInsets.all(8.0),
+            margin: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
                 color: colorFront,
                 border: Border(
@@ -76,6 +80,7 @@ class WriteView extends StatelessWidget {
                   bottom: BorderSide(color: colorMain),
                 )),
             child: TextField(
+              style: textStyleBig,
               decoration: InputDecoration(
                   border: InputBorder.none, hintText: "your name"),
             ),

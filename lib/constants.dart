@@ -6,3 +6,6 @@ Color colorMain = Color(0xFFFFBE00);
 
 TextStyle textStyleTitle =
     TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold, color: colorMain);
+
+TextStyle textStyleBig =
+    TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color: colorMain);
