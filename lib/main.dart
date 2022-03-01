@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'UI/pages/home.dart';
+import 'constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,13 +10,12 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Scribble MC',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: colorMain,
       ),
       home: const Home(),
     );
