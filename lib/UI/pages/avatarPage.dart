@@ -46,11 +46,17 @@ class _AvatarPageState extends State<AvatarPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextField(
-                    onSubmitted: (code) {},
+                    onSubmitted: (code) {
+                      roomBloc..add(RoomEventJoinRoomStart(roomId: code));
+                    },
                     style: textStyleBig,
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
                         border: InputBorder.none, hintText: "ROOM CODE"),
+                  ),
+                  Text(
+                    roomBloc.error,
+                    style: textStyleError,
                   ),
                 ],
               );

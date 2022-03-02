@@ -36,4 +36,16 @@ class DatabaseRepository {
       roomBloc..add(RoomEventRefresh());
     });
   }
+
+  Future<bool> joinRoom(String roomId, Player player) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    QuerySnapshot room = await db.collection('/rooms/$roomId/').get();
+    if (room.docs.isEmpty) {
+      roomBloc..add(RoomEventError(error: "no-room"));
+      return false;
+    } else {
+      await db.collection('/rooms/$roomId/players').add(player.toMap());
+      return true;
+    }
+  }
 }

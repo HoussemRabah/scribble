@@ -12,3 +12,6 @@ TextStyle textStyleBig =
 
 TextStyle textStyleSmall =
     TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: colorMain);
+
+TextStyle textStyleError = TextStyle(
+    fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.redAccent);
