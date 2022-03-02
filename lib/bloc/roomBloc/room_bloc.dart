@@ -70,11 +70,16 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
           emit(RoomStateLoading(process: 0.9));
           await Future.delayed(Duration(seconds: 1));
           emit(RoomStateNewRoom(id: roomId!, players: players));
-        } else {}
+        } else {
+          error = "kach error ";
+
+          emit(RoomStateJoinRoom());
+        }
       }
 
       if (event is RoomEventError) {
         error = event.error;
+        emit(event.nextStat);
       }
     });
   }

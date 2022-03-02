@@ -39,13 +39,24 @@ class DatabaseRepository {
 
   Future<bool> joinRoom(String roomId, Player player) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    QuerySnapshot room = await db.collection('/rooms/$roomId/').get();
-    if (room.docs.isEmpty) {
-      roomBloc..add(RoomEventError(error: "no-room"));
+    try {
+      DocumentSnapshot? room =
+          await db.collection('/rooms/').doc("$roomId/").get();
+      if (!room.exists) {
+        roomBloc
+          ..add(RoomEventError(
+              error: "no room with this code", nextStat: RoomStateJoinRoom()));
+
+        return false;
+      } else {
+        await db.collection('/rooms/$roomId/players/').add(player.toMap());
+        return true;
+      }
+    } on FirebaseException catch (e) {
+      roomBloc
+        ..add(RoomEventError(
+            error: "no room with this code", nextStat: RoomStateJoinRoom()));
       return false;
-    } else {
-      await db.collection('/rooms/$roomId/players').add(player.toMap());
-      return true;
     }
   }
 }

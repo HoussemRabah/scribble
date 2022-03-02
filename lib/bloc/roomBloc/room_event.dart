@@ -19,6 +19,7 @@ class RoomEventJoinRoomStart extends RoomEvent {
 class RoomEventRefresh extends RoomEvent {}
 
 class RoomEventError extends RoomEvent {
+  final RoomState nextStat;
   final String error;
-  RoomEventError({required this.error}) : super();
+  RoomEventError({required this.error, required this.nextStat}) : super();
 }
