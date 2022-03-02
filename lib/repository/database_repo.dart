@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:scribble/UI/pages/home.dart';
+import 'package:scribble/bloc/roomBloc/room_bloc.dart';
 import 'package:scribble/module/player.dart';
 import 'package:scribble/module/round.dart';
 
@@ -26,5 +28,12 @@ class DatabaseRepository {
     }
 
     return players;
+  }
+
+  playersListener(String roomId) {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db.collection("/rooms/$roomId/players/").snapshots().listen((event) {
+      roomBloc..add(RoomEventRefresh());
+    });
   }
 }

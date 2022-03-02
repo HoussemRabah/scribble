@@ -25,6 +25,12 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         if (rounds - 1 > 0) rounds--;
         emit(RoomInitial());
       }
+
+      if (event is RoomEventRefresh) {
+        players = await database.getPlayers(roomId!);
+        emit(RoomStateNewRoom(id: roomId!, players: players));
+      }
+
       if (event is RoomEventNewRoom) {
         emit(RoomStateLoading(process: 0.3));
         roomId = await database.createRoom(
