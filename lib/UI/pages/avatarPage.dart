@@ -29,7 +29,8 @@ class _AvatarPageState extends State<AvatarPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: userBloc),
-        BlocProvider.value(value: roomBloc),
+        BlocProvider.value(
+            value: roomBloc..add(RoomEventInit(context: context))),
       ],
       child: Scaffold(
         backgroundColor: colorBack,
@@ -40,26 +41,7 @@ class _AvatarPageState extends State<AvatarPage> {
               return NewRoomView(
                 state: state,
               );
-            if (state is RoomStateJoinRoom)
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextField(
-                    onSubmitted: (code) {
-                      roomBloc..add(RoomEventJoinRoomStart(roomId: code));
-                    },
-                    style: textStyleBig,
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                        border: InputBorder.none, hintText: "ROOM CODE"),
-                  ),
-                  Text(
-                    roomBloc.error,
-                    style: textStyleError,
-                  ),
-                ],
-              );
+            if (state is RoomStateJoinRoom) return JoinView();
             if (state is RoomStateLoading)
               return Center(
                 child: LoadingBar(process: state.process),
@@ -68,6 +50,35 @@ class _AvatarPageState extends State<AvatarPage> {
           },
         ),
       ),
+    );
+  }
+}
+
+class JoinView extends StatelessWidget {
+  const JoinView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextField(
+          onSubmitted: (code) {
+            roomBloc..add(RoomEventJoinRoomStart(roomId: code));
+          },
+          style: textStyleBig,
+          textAlign: TextAlign.center,
+          decoration:
+              InputDecoration(border: InputBorder.none, hintText: "ROOM CODE"),
+        ),
+        Text(
+          roomBloc.error,
+          style: textStyleError,
+        ),
+      ],
     );
   }
 }
@@ -89,7 +100,13 @@ class NewRoomView extends StatelessWidget {
         PlayersInRoom(state: state),
 
         // play
-        Button(text: roomBloc.iamTheCreator ? "play" : "exit", function: () {})
+        Button(
+            text: roomBloc.iamTheCreator ? "play" : "exit",
+            function: () {
+              if (roomBloc.iamTheCreator) {
+                roomBloc..add(RoomEventStartTheGame());
+              }
+            })
       ],
     );
   }

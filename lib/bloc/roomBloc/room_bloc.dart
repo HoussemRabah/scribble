@@ -1,6 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase/firebase.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:scribble/UI/pages/gamePage.dart';
 import 'package:scribble/UI/pages/home.dart';
 import 'package:scribble/module/player.dart';
 import 'package:scribble/module/round.dart';
@@ -17,8 +20,14 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   String? roomId;
   List<Player> players = [];
   String error = "";
+  BuildContext? context;
+
   RoomBloc() : super(RoomInitial()) {
     on<RoomEvent>((event, emit) async {
+      if (event is RoomEventInit) {
+        context = (event as RoomEventInit).context;
+      }
+
       if (event is RoomEventIncRounds) {
         if (rounds + 1 <= 20) rounds++;
         emit(RoomInitial());
@@ -54,6 +63,11 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         emit(RoomStateJoinRoom());
       }
 
+      if (event is RoomEventGameOn) {
+        Navigator.of(context!).pushReplacement(
+            MaterialPageRoute(builder: (context) => GamePage()));
+      }
+
       if (event is RoomEventJoinRoomStart) {
         emit(RoomStateLoading(process: 0.1));
         roomId = event.roomId;
@@ -84,6 +98,12 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       if (event is RoomEventError) {
         error = event.error;
         emit(event.nextStat);
+      }
+      if (event is RoomEventStartTheGame) {
+        database.startTheGame(
+          roomId!,
+          Round(creatorId: userBloc.user!.user!.uid, roundsNumber: rounds),
+        );
       }
     });
   }

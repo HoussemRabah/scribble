@@ -35,6 +35,17 @@ class DatabaseRepository {
     db.collection("/rooms/$roomId/players/").snapshots().listen((event) {
       roomBloc..add(RoomEventRefresh());
     });
+
+    db.collection("/rooms/$roomId").snapshots().listen((event) {
+      if (event.docs[0]['gameOn'] as bool) {
+        roomBloc..add(RoomEventGameOn());
+      }
+    });
+  }
+
+  startTheGame(String roundId, Round round) {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db.doc("/rooms/$roundId").update(round.gameOn());
   }
 
   Future<bool> joinRoom(String roomId, Player player) async {
