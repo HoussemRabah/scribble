@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scribble/UI/pages/home.dart';
+import 'package:scribble/UI/widgets/buttons.dart';
+import 'package:scribble/bloc/roomBloc/room_bloc.dart';
 import 'package:scribble/bloc/userBloc/user_bloc.dart';
 
 import '../../constants.dart';
@@ -19,11 +21,16 @@ List<String> avatars = [
   "assets/Skins/The rock.svg"
 ];
 
+RoomBloc roomBloc = RoomBloc();
+
 class _AvatarPageState extends State<AvatarPage> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider.value(value: userBloc)],
+      providers: [
+        BlocProvider.value(value: userBloc),
+        BlocProvider.value(value: roomBloc),
+      ],
       child: Scaffold(
         backgroundColor: colorBack,
         body: Column(
@@ -37,12 +44,31 @@ class _AvatarPageState extends State<AvatarPage> {
                 style: textStyleBig.copyWith(
                   color: Colors.white,
                 )),
-            //    Button(), X2
+            Button(text: "CREATE ROOM", function: () {}),
+            Button(text: "JOIN ROOM", function: () {}),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // ButtonSqaure()
-                // ButtonRound()
-                // ButtonSqaure()
+                ButtonSqaure(
+                  text: "-",
+                  function: () {
+                    context.read<RoomBloc>().add(RoomEventDicRounds());
+                  },
+                ),
+                BlocBuilder<RoomBloc, RoomState>(
+                  builder: (context, state) {
+                    return ButtonRound(
+                      text: roomBloc.rounds.toString(),
+                      function: () {},
+                    );
+                  },
+                ),
+                ButtonSqaure(
+                  text: "+",
+                  function: () {
+                    context.read<RoomBloc>().add(RoomEventIncRounds());
+                  },
+                )
               ],
             ),
             Row(

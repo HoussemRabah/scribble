@@ -9,3 +9,6 @@ TextStyle textStyleTitle =
 
 TextStyle textStyleBig =
     TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color: colorMain);
+
+TextStyle textStyleSmall =
+    TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: colorMain);
