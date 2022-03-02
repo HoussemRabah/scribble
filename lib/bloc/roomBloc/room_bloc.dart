@@ -13,6 +13,7 @@ part 'room_state.dart';
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
   DatabaseRepository database = DatabaseRepository();
   int rounds = 1;
+  bool iamTheCreator = false;
   String? roomId;
   List<Player> players = [];
   RoomBloc() : super(RoomInitial()) {
@@ -39,8 +40,10 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
                 name: userBloc.userName ?? getDefaultName(),
                 avatar: userBloc.avatar,
                 id: userBloc.user!.user!.uid));
+        database.playersListener(roomId!);
         emit(RoomStateLoading(process: 0.5));
         players = await database.getPlayers(roomId!);
+        iamTheCreator = true;
         emit(RoomStateLoading(process: 0.9));
         await Future.delayed(Duration(seconds: 1));
         emit(RoomStateNewRoom(id: roomId!, players: players));

@@ -45,35 +45,12 @@ class _AvatarPageState extends State<AvatarPage> {
                     textAlign: TextAlign.center,
                   ),
                   // players
-                  Wrap(
-                    children: [
-                      for (Player player in state.players)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SvgPicture.asset(
-                              player.avatar,
-                              theme: SvgTheme(currentColor: Colors.white),
-                              fit: BoxFit.fitWidth,
-                              width: (player.id == userBloc.user!.user!.uid)
-                                  ? 49
-                                  : 53,
-                            ),
-                            Text(
-                              player.name,
-                              style: textStyleSmall.copyWith(
-                                  color: (player.id == userBloc.user!.user!.uid)
-                                      ? colorMain
-                                      : colorFront),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
+                  PlayersInRoom(state: state),
 
                   // play
+                  Button(
+                      text: roomBloc.iamTheCreator ? "play" : "exit",
+                      function: () {})
                 ],
               );
             if (state is RoomStateLoading)
@@ -84,6 +61,40 @@ class _AvatarPageState extends State<AvatarPage> {
           },
         ),
       ),
+    );
+  }
+}
+
+class PlayersInRoom extends StatelessWidget {
+  final RoomStateNewRoom state;
+  const PlayersInRoom({Key? key, required this.state}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      runSpacing: 8.0,
+      spacing: 8.0,
+      children: [
+        for (Player player in state.players)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(player.avatar,
+                  theme: SvgTheme(currentColor: Colors.white),
+                  fit: BoxFit.fitWidth,
+                  width: 49),
+              Text(
+                player.name,
+                style: textStyleSmall.copyWith(
+                    color: (player.id == userBloc.user!.user!.uid)
+                        ? colorMain
+                        : colorFront),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }
