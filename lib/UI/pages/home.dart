@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scribble/UI/widgets/laoding.dart';
 import 'package:scribble/UI/widgets/layouts.dart';
+import 'package:scribble/bloc/roomBloc/room_bloc.dart';
 import 'package:scribble/bloc/userBloc/user_bloc.dart';
 import 'package:scribble/constants.dart';
 
@@ -13,6 +14,7 @@ class Home extends StatefulWidget {
 }
 
 UserBloc userBloc = UserBloc();
+RoomBloc roomBloc = RoomBloc();
 
 class _HomeState extends State<Home> {
   @override
@@ -22,7 +24,9 @@ class _HomeState extends State<Home> {
       body: MultiBlocProvider(
           providers: [
             BlocProvider.value(
-                value: userBloc..add(UserEventInit(context: context)))
+              value: userBloc..add(UserEventInit(context: context)),
+            ),
+            BlocProvider.value(value: roomBloc),
           ],
           child: BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {

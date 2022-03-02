@@ -10,9 +10,11 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     on<RoomEvent>((event, emit) {
       if (event is RoomEventIncRounds) {
         if (rounds + 1 <= 20) rounds++;
+        emit(RoomInitial());
       }
       if (event is RoomEventDicRounds) {
         if (rounds - 1 > 0) rounds--;
+        emit(RoomInitial());
       }
     });
   }

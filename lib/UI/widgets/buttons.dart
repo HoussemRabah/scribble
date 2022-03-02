@@ -39,7 +39,7 @@ class ButtonSqaure extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        function();
+        function(context);
       },
       child: Container(
         padding: EdgeInsets.all(8.0),

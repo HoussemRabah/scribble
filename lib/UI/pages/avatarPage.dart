@@ -21,8 +21,6 @@ List<String> avatars = [
   "assets/Skins/The rock.svg"
 ];
 
-RoomBloc roomBloc = RoomBloc();
-
 class _AvatarPageState extends State<AvatarPage> {
   @override
   Widget build(BuildContext context) {
@@ -46,30 +44,30 @@ class _AvatarPageState extends State<AvatarPage> {
                 )),
             Button(text: "CREATE ROOM", function: () {}),
             Button(text: "JOIN ROOM", function: () {}),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ButtonSqaure(
-                  text: "-",
-                  function: () {
-                    context.read<RoomBloc>().add(RoomEventDicRounds());
-                  },
-                ),
-                BlocBuilder<RoomBloc, RoomState>(
-                  builder: (context, state) {
-                    return ButtonRound(
+            BlocBuilder<RoomBloc, RoomState>(
+              builder: (context, state) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ButtonSqaure(
+                      text: "-",
+                      function: () {
+                        roomBloc..add(RoomEventDicRounds());
+                      },
+                    ),
+                    ButtonRound(
                       text: roomBloc.rounds.toString(),
                       function: () {},
-                    );
-                  },
-                ),
-                ButtonSqaure(
-                  text: "+",
-                  function: () {
-                    context.read<RoomBloc>().add(RoomEventIncRounds());
-                  },
-                )
-              ],
+                    ),
+                    ButtonSqaure(
+                      text: "+",
+                      function: () {
+                        context.read<RoomBloc>().add(RoomEventIncRounds());
+                      },
+                    )
+                  ],
+                );
+              },
             ),
             Row(
               children: [
