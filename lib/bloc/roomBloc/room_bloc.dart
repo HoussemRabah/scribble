@@ -31,7 +31,8 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
             Round(creatorId: userBloc.user!.user!.uid, roundsNumber: rounds),
             Player(
                 name: userBloc.userName ?? getDefaultName(),
-                avatar: userBloc.avatar));
+                avatar: userBloc.avatar,
+                id: userBloc.user!.user!.uid));
         emit(RoomStateLoading(process: 0.5));
         players = await database.getPlayers(roomId!);
         emit(RoomStateLoading(process: 0.9));
