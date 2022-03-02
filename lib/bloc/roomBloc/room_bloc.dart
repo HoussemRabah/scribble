@@ -48,6 +48,10 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         await Future.delayed(Duration(seconds: 1));
         emit(RoomStateNewRoom(id: roomId!, players: players));
       }
+
+      if (event is RoomEventJoinRoom) {
+        emit(RoomStateJoinRoom());
+      }
     });
   }
 }

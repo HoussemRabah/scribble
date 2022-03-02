@@ -5,6 +5,8 @@ abstract class RoomState {}
 
 class RoomInitial extends RoomState {}
 
+class RoomStateJoinRoom extends RoomState {}
+
 class RoomStateNewRoom extends RoomState {
   final String id;
   final List<Player> players;

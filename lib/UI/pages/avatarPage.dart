@@ -37,20 +37,21 @@ class _AvatarPageState extends State<AvatarPage> {
           builder: (context, state) {
             if (state is RoomInitial) return InitialView();
             if (state is RoomStateNewRoom)
+              return NewRoomView(
+                state: state,
+              );
+            if (state is RoomStateJoinRoom)
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SelectableText(
-                    "ROOM ID : ${state.id}",
+                  TextField(
+                    onSubmitted: (code) {},
                     style: textStyleBig,
                     textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                        border: InputBorder.none, hintText: "ROOM CODE"),
                   ),
-                  // players
-                  PlayersInRoom(state: state),
-
-                  // play
-                  Button(
-                      text: roomBloc.iamTheCreator ? "play" : "exit",
-                      function: () {})
                 ],
               );
             if (state is RoomStateLoading)
@@ -61,6 +62,29 @@ class _AvatarPageState extends State<AvatarPage> {
           },
         ),
       ),
+    );
+  }
+}
+
+class NewRoomView extends StatelessWidget {
+  final RoomStateNewRoom state;
+  const NewRoomView({Key? key, required this.state}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SelectableText(
+          "ROOM ID : ${state.id}",
+          style: textStyleBig,
+          textAlign: TextAlign.center,
+        ),
+        // players
+        PlayersInRoom(state: state),
+
+        // play
+        Button(text: roomBloc.iamTheCreator ? "play" : "exit", function: () {})
+      ],
     );
   }
 }
@@ -127,7 +151,11 @@ class _InitialViewState extends State<InitialView> {
             function: () {
               roomBloc..add(RoomEventNewRoom());
             }),
-        Button(text: "JOIN ROOM", function: () {}),
+        Button(
+            text: "JOIN ROOM",
+            function: () {
+              roomBloc..add(RoomEventJoinRoom());
+            }),
         BlocBuilder<RoomBloc, RoomState>(
           builder: (context, state) {
             return Row(
