@@ -13,7 +13,7 @@ part 'room_state.dart';
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
   DatabaseRepository database = DatabaseRepository();
   int rounds = 1;
-  bool iamTheCreator = false;
+  bool iamTheCreator = true;
   String? roomId;
   List<Player> players = [];
   String error = "";
@@ -56,6 +56,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
       if (event is RoomEventJoinRoomStart) {
         emit(RoomStateLoading(process: 0.1));
+        roomId = event.roomId;
         bool reponse = await database.joinRoom(
             event.roomId,
             Player(
@@ -63,10 +64,13 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
                 avatar: userBloc.avatar,
                 id: userBloc.user!.user!.uid));
         if (reponse) {
+          iamTheCreator = false;
+
           database.playersListener(roomId!);
+
           emit(RoomStateLoading(process: 0.5));
           players = await database.getPlayers(roomId!);
-          iamTheCreator = false;
+
           emit(RoomStateLoading(process: 0.9));
           await Future.delayed(Duration(seconds: 1));
           emit(RoomStateNewRoom(id: roomId!, players: players));

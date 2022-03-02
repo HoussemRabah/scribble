@@ -210,9 +210,10 @@ class AvtarSelctor extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
+            refreshAvtars(0);
+
             context.read<UserBloc>().add(UserEventChangeAvatar(
                 newAvatar: avatars[1])); // just to rebuild widget
-            refreshAvtars(0);
           },
           child: SvgPicture.asset(
             avatars[0],
@@ -227,9 +228,10 @@ class AvtarSelctor extends StatelessWidget {
             theme: SvgTheme(currentColor: Colors.white)),
         GestureDetector(
           onTap: () {
+            refreshAvtars(2);
+
             context.read<UserBloc>().add(UserEventChangeAvatar(
                 newAvatar: avatars[1])); // just to rebuild widget
-            refreshAvtars(2);
           },
           child: SvgPicture.asset(avatars[2],
               width: 41,
