@@ -16,10 +16,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   AuthRepository auth = AuthRepository();
   UserCredential? user;
   String? userName;
+  BuildContext? context;
 
   UserBloc() : super(UserStateLoading(process: 0.0)) {
     on<UserEvent>((event, emit) async {
       if (event is UserEventInit) {
+        context = event.context;
         emit(UserStateLoading(process: 0.1));
         user = await auth.signIn();
         emit(UserStateLoading(process: 0.3));
@@ -42,7 +44,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         if (reponse) {
           emit(UserStateLoading(process: 1.0));
           await Future.delayed(Duration(milliseconds: 2000));
-          Navigator.of(event.context).pushReplacement(
+          Navigator.of(context!).pushReplacement(
               MaterialPageRoute(builder: (context) => AvatarPage()));
         }
       }

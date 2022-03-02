@@ -21,7 +21,8 @@ class _HomeState extends State<Home> {
       backgroundColor: colorBack,
       body: MultiBlocProvider(
           providers: [
-            BlocProvider.value(value: userBloc..add(UserEventInit()))
+            BlocProvider.value(
+                value: userBloc..add(UserEventInit(context: context)))
           ],
           child: BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
@@ -83,8 +84,9 @@ class WriteView extends StatelessWidget {
                 )),
             child: TextField(
               onSubmitted: (username) {
-                context.read<UserBloc>().add(
-                    UserEventNewUser(username: username, context: context));
+                context
+                    .read<UserBloc>()
+                    .add(UserEventNewUser(username: username));
               },
               style: textStyleBig,
               textAlign: TextAlign.center,
