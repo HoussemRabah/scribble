@@ -39,11 +39,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
       if (event is UserEventNewUser) {
         emit(UserStateLoading(process: 0.8));
-        bool reponse = await storage.setUser(userName ?? getDefaultName());
+        userName = event.username;
+        bool reponse = await storage.setUser(
+            (event.username.isEmpty) ? getDefaultName() : event.username);
 
         if (reponse) {
           emit(UserStateLoading(process: 1.0));
-          await Future.delayed(Duration(milliseconds: 2000));
+          await Future.delayed(Duration(milliseconds: 1000));
           Navigator.of(context!).pushReplacement(
               MaterialPageRoute(builder: (context) => AvatarPage()));
         }

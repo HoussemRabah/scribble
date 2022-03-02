@@ -19,16 +19,20 @@ class _AvatarPageState extends State<AvatarPage> {
       body: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SvgPicture.asset("assets/Boy.svg",
-                  width: 41, fit: BoxFit.fitWidth),
-              SvgPicture.asset("assets/The rock.svg",
+              SvgPicture.asset(
+                "assets/Skins/Boy.svg",
+                width: 41,
+                fit: BoxFit.fitWidth,
+              ),
+              SvgPicture.asset("assets/Skins/The rock.svg",
                   width: 59, fit: BoxFit.fitWidth),
-              SvgPicture.asset("assets/Girl.svg",
+              SvgPicture.asset("assets/Skins/Girl.svg",
                   width: 41, fit: BoxFit.fitWidth),
             ],
           ),
-          Text(userBloc.storage.username ?? "ops null error ):",
+          Text(userBloc.userName ?? "ops null error ):",
               style: textStyleBig.copyWith(
                 color: Colors.white,
               )),
