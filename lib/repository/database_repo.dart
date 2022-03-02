@@ -7,12 +7,10 @@ class DatabaseRepository {
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference roundDoc =
         await db.collection("/rooms/").add(round.toMap()).then((value) async {
-      return await db
-          .collection('/rooms/${value.id}/players')
-          .add(player.toMap());
+      return await db.collection('${value.path}/players').add(player.toMap());
     });
 
-    return roundDoc.id;
+    return roundDoc.path.split('/')[1];
   }
 
   Future<List<Player>> getPlayers(String roomId) async {
@@ -20,7 +18,7 @@ class DatabaseRepository {
     FirebaseFirestore db = FirebaseFirestore.instance;
     QuerySnapshot playersSnapshot =
         await db.collection("/rooms/$roomId/players/").get();
-
+    print("/rooms/$roomId/players/");
     for (QueryDocumentSnapshot player in playersSnapshot.docs) {
       if (player.data() != null) {
         players.add(playerFromMap(player.data() as Map));

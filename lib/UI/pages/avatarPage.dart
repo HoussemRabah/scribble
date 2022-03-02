@@ -47,7 +47,29 @@ class _AvatarPageState extends State<AvatarPage> {
                   // players
                   Wrap(
                     children: [
-                      for (Player player in state.players) Text(player.name),
+                      for (Player player in state.players)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                              player.avatar,
+                              theme: SvgTheme(currentColor: Colors.white),
+                              fit: BoxFit.fitWidth,
+                              width: (player.id == userBloc.user!.user!.uid)
+                                  ? 49
+                                  : 53,
+                            ),
+                            Text(
+                              player.name,
+                              style: textStyleSmall.copyWith(
+                                  color: (player.id == userBloc.user!.user!.uid)
+                                      ? colorMain
+                                      : colorFront),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
 
