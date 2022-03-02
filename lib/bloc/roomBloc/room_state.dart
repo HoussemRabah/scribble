@@ -6,8 +6,10 @@ abstract class RoomState {}
 class RoomInitial extends RoomState {}
 
 class RoomStateNewRoom extends RoomState {
-  String id;
-  RoomStateNewRoom({required this.id}) : super();
+  final String id;
+  final List<Player> players;
+
+  RoomStateNewRoom({required this.id, required this.players}) : super();
 }
 
 class RoomStateLoading extends RoomState {

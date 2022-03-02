@@ -9,3 +9,7 @@ class Player {
     };
   }
 }
+
+Player playerFromMap(Map map) {
+  return Player(name: map["name"], avatar: map["avatar"]);
+}

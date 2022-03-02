@@ -6,6 +6,7 @@ import 'package:scribble/UI/widgets/buttons.dart';
 import 'package:scribble/UI/widgets/laoding.dart';
 import 'package:scribble/bloc/roomBloc/room_bloc.dart';
 import 'package:scribble/bloc/userBloc/user_bloc.dart';
+import 'package:scribble/module/player.dart';
 
 import '../../constants.dart';
 
@@ -38,11 +39,18 @@ class _AvatarPageState extends State<AvatarPage> {
             if (state is RoomStateNewRoom)
               return Column(
                 children: [
-                  Text(
+                  SelectableText(
                     "ROOM ID : ${state.id}",
                     style: textStyleBig,
+                    textAlign: TextAlign.center,
                   ),
                   // players
+                  Wrap(
+                    children: [
+                      for (Player player in state.players) Text(player.name),
+                    ],
+                  ),
+
                   // play
                 ],
               );

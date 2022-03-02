@@ -14,6 +14,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   DatabaseRepository database = DatabaseRepository();
   int rounds = 1;
   String? roomId;
+  List<Player> players = [];
   RoomBloc() : super(RoomInitial()) {
     on<RoomEvent>((event, emit) async {
       if (event is RoomEventIncRounds) {
@@ -31,9 +32,11 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
             Player(
                 name: userBloc.userName ?? getDefaultName(),
                 avatar: userBloc.avatar));
-        emit(RoomStateLoading(process: 1.0));
+        emit(RoomStateLoading(process: 0.5));
+        players = await database.getPlayers(roomId!);
+        emit(RoomStateLoading(process: 0.9));
         await Future.delayed(Duration(seconds: 1));
-        emit(RoomStateNewRoom(id: roomId!));
+        emit(RoomStateNewRoom(id: roomId!, players: players));
       }
     });
   }

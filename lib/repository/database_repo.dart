@@ -14,4 +14,19 @@ class DatabaseRepository {
 
     return roundDoc.id;
   }
+
+  Future<List<Player>> getPlayers(String roomId) async {
+    List<Player> players = [];
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    QuerySnapshot playersSnapshot =
+        await db.collection("/rooms/$roomId/players/").get();
+
+    for (QueryDocumentSnapshot player in playersSnapshot.docs) {
+      if (player.data() != null) {
+        players.add(playerFromMap(player.data() as Map));
+      }
+    }
+
+    return players;
+  }
 }
