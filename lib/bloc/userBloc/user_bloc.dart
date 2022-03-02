@@ -47,8 +47,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       if (event is UserEventNewUser) {
         emit(UserStateLoading(process: 0.8));
         userName = event.username;
-        bool reponse = await storage.setUser(
-            (event.username.isEmpty) ? getDefaultName() : event.username);
+        if (userName!.isEmpty) userName = getDefaultName();
+        bool reponse = await storage.setUser(userName!);
 
         if (reponse) {
           emit(UserStateLoading(process: 1.0));

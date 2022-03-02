@@ -1,3 +1,4 @@
+import 'package:firebase/firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:scribble/constants.dart';
 
@@ -39,7 +40,7 @@ class ButtonSqaure extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        function(context);
+        function();
       },
       child: Container(
         padding: EdgeInsets.all(8.0),

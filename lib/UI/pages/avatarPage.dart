@@ -58,11 +58,16 @@ class _AvatarPageState extends State<AvatarPage> {
   }
 }
 
-class InitialView extends StatelessWidget {
+class InitialView extends StatefulWidget {
   const InitialView({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<InitialView> createState() => _InitialViewState();
+}
+
+class _InitialViewState extends State<InitialView> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -76,7 +81,11 @@ class InitialView extends StatelessWidget {
             style: textStyleBig.copyWith(
               color: Colors.white,
             )),
-        Button(text: "CREATE ROOM", function: () {}),
+        Button(
+            text: "CREATE ROOM",
+            function: () {
+              roomBloc..add(RoomEventNewRoom());
+            }),
         Button(text: "JOIN ROOM", function: () {}),
         BlocBuilder<RoomBloc, RoomState>(
           builder: (context, state) {
