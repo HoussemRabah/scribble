@@ -9,6 +9,11 @@ class UserEventNewUser extends UserEvent {
 }
 
 class UserEventInit extends UserEvent {
-  BuildContext context;
+  final BuildContext context;
   UserEventInit({required this.context}) : super();
+}
+
+class UserEventChangeAvatar extends UserEvent {
+  final String newAvatar;
+  UserEventChangeAvatar({required this.newAvatar}) : super();
 }

@@ -17,6 +17,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   UserCredential? user;
   String? userName;
   BuildContext? context;
+  String avatar = "assets/Skins/Boy.svg";
 
   UserBloc() : super(UserStateLoading(process: 0.0)) {
     on<UserEvent>((event, emit) async {
@@ -35,6 +36,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         } else {
           emit(UserStateLoadedSigned(username: userName ?? getDefaultName()));
         }
+      }
+
+      if (event is UserEventChangeAvatar) {
+        emit(UserStateLoading(process: 1.0));
+        avatar = event.newAvatar;
       }
 
       if (event is UserEventNewUser) {
