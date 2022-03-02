@@ -6,3 +6,5 @@ abstract class RoomEvent {}
 class RoomEventIncRounds extends RoomEvent {}
 
 class RoomEventDicRounds extends RoomEvent {}
+
+class RoomEventNewRoom extends RoomEvent {}

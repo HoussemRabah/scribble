@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scribble/UI/pages/home.dart';
 import 'package:scribble/UI/widgets/buttons.dart';
+import 'package:scribble/UI/widgets/laoding.dart';
 import 'package:scribble/bloc/roomBloc/room_bloc.dart';
 import 'package:scribble/bloc/userBloc/user_bloc.dart';
 
@@ -31,53 +32,84 @@ class _AvatarPageState extends State<AvatarPage> {
       ],
       child: Scaffold(
         backgroundColor: colorBack,
-        body: Column(
-          children: [
-            BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                return AvtarSelctor();
-              },
-            ),
-            Text(userBloc.userName ?? "ops null error ):",
-                style: textStyleBig.copyWith(
-                  color: Colors.white,
-                )),
-            Button(text: "CREATE ROOM", function: () {}),
-            Button(text: "JOIN ROOM", function: () {}),
-            BlocBuilder<RoomBloc, RoomState>(
-              builder: (context, state) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ButtonSqaure(
-                      text: "-",
-                      function: () {
-                        roomBloc..add(RoomEventDicRounds());
-                      },
-                    ),
-                    ButtonRound(
-                      text: roomBloc.rounds.toString(),
-                      function: () {},
-                    ),
-                    ButtonSqaure(
-                      text: "+",
-                      function: () {
-                        context.read<RoomBloc>().add(RoomEventIncRounds());
-                      },
-                    )
-                  ],
-                );
-              },
-            ),
-            Row(
-              children: [
-                //LeftArrow()
-                //RightArrow()
-              ],
-            )
-          ],
+        body: BlocBuilder<RoomBloc, RoomState>(
+          builder: (context, state) {
+            if (state is RoomInitial) return InitialView();
+            if (state is RoomStateNewRoom)
+              return Column(
+                children: [
+                  Text(
+                    "ROOM ID : ${state.id}",
+                    style: textStyleBig,
+                  ),
+                  // players
+                  // play
+                ],
+              );
+            if (state is RoomStateLoading)
+              return Center(
+                child: LoadingBar(process: state.process),
+              );
+            return Text("ops ! ");
+          },
         ),
       ),
+    );
+  }
+}
+
+class InitialView extends StatelessWidget {
+  const InitialView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        BlocBuilder<UserBloc, UserState>(
+          builder: (context, state) {
+            return AvtarSelctor();
+          },
+        ),
+        Text(userBloc.userName ?? "ops null error ):",
+            style: textStyleBig.copyWith(
+              color: Colors.white,
+            )),
+        Button(text: "CREATE ROOM", function: () {}),
+        Button(text: "JOIN ROOM", function: () {}),
+        BlocBuilder<RoomBloc, RoomState>(
+          builder: (context, state) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ButtonSqaure(
+                  text: "-",
+                  function: () {
+                    roomBloc..add(RoomEventDicRounds());
+                  },
+                ),
+                ButtonRound(
+                  text: roomBloc.rounds.toString(),
+                  function: () {},
+                ),
+                ButtonSqaure(
+                  text: "+",
+                  function: () {
+                    context.read<RoomBloc>().add(RoomEventIncRounds());
+                  },
+                )
+              ],
+            );
+          },
+        ),
+        Row(
+          children: [
+            //LeftArrow()
+            //RightArrow()
+          ],
+        )
+      ],
     );
   }
 }
