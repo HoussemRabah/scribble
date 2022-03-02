@@ -5,7 +5,8 @@ abstract class UserEvent {}
 
 class UserEventNewUser extends UserEvent {
   final String username;
-  UserEventNewUser({required this.username}) : super();
+  BuildContext context;
+  UserEventNewUser({required this.username, required this.context}) : super();
 }
 
 class UserEventInit extends UserEvent {}

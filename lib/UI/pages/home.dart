@@ -83,9 +83,8 @@ class WriteView extends StatelessWidget {
                 )),
             child: TextField(
               onSubmitted: (username) {
-                context
-                    .read<UserBloc>()
-                    .add(UserEventNewUser(username: username));
+                context.read<UserBloc>().add(
+                    UserEventNewUser(username: username, context: context));
               },
               style: textStyleBig,
               textAlign: TextAlign.center,

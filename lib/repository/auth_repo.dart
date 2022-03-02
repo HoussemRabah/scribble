@@ -5,6 +5,8 @@ class AuthRepository {
 
   Future<UserCredential> signIn() async {
     UserCredential user = await authDb.signInAnonymously();
+    await Future.delayed(Duration(milliseconds: 2000));
+
     return user;
   }
 }
