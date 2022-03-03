@@ -7,7 +7,10 @@ class Round {
       "creatorId": creatorId,
       "roundsNumber": roundsNumber,
       "gameOn": false,
-      "currentRound": creatorId
+      "currentRound": creatorId,
+      "currentPlayer": 0,
+      "listOfWords": ["h", "h", "h"],
+      "currentWord": "",
     };
   }
 
@@ -16,7 +19,10 @@ class Round {
       "creatorId": creatorId,
       "roundsNumber": roundsNumber,
       "gameOn": true,
-      "currentRound": creatorId
+      "currentRound": creatorId,
+      "currentPlayer": 0,
+      "listOfWords": ["h", "h", "h"],
+      "currentWord": "",
     };
   }
 }

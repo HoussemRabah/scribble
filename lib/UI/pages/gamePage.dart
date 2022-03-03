@@ -104,7 +104,9 @@ class CentrePage extends StatelessWidget {
                 child: Icon(Icons.arrow_right),
               ),
             ),
-            if (!gameBloc.expanded)
+            if (!gameBloc.expanded &&
+                gameBloc.myTurn &&
+                gameBloc.currentWord == "")
               AnimatedContainer(
                 duration: Duration(milliseconds: 500),
                 width: MediaQuery.of(context).size.width - 60 - 8.0 - 8.0 - 50,
@@ -117,15 +119,11 @@ class CentrePage extends StatelessWidget {
                       "CHOOSE A WORD",
                       style: textStyleBig,
                     ),
-                    Button(text: "word 1", function: () {}),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Button(text: "word 2", function: () {}),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Button(text: "word 2", function: () {}),
+                    for (String word in gameBloc.listOfWords)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0, 0, 0, 8.0),
+                        child: Button(text: word, function: () {}),
+                      ),
                   ],
                 ),
               )

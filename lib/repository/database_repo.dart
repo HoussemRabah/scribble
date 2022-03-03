@@ -22,9 +22,56 @@ class DatabaseRepository {
     return messages;
   }
 
-  messagesListener(String roomId) {
+  Future<int> getCurrentRound(String roomId) async {
+    int currentRound = 0;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentSnapshot doc = await db.doc("/rooms/$roomId/").get();
+
+    if (doc.exists) {
+      currentRound = (doc.data()! as Map)["currentRound"];
+    }
+    return currentRound;
+  }
+
+  Future<int> getCurrentPlayer(String roomId) async {
+    int currentPlayer = 0;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentSnapshot doc = await db.doc("/rooms/$roomId/").get();
+
+    if (doc.exists) {
+      currentPlayer = (doc.data()! as Map)["currentPlayer"];
+    }
+    return currentPlayer;
+  }
+
+  Future<List<String>> getListOfWords(String roomId) async {
+    List<String> listOfWords = [];
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentSnapshot doc = await db.doc("/rooms/$roomId/").get();
+
+    if (doc.exists) {
+      listOfWords = (doc.data()! as Map)["listOfWords"];
+    }
+    return listOfWords;
+  }
+
+  Future<String> getCurrentWord(String roomId) async {
+    String currentWord = "";
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentSnapshot doc = await db.doc("/rooms/$roomId/").get();
+
+    if (doc.exists) {
+      currentWord = (doc.data()! as Map)["currentWord"];
+    }
+    return currentWord;
+  }
+
+  gameListener(String roomId) {
     FirebaseFirestore db = FirebaseFirestore.instance;
     db.collection("/rooms/$roomId/messages/").snapshots().listen((event) {
+      gameBloc..add(GameEventRefresh());
+    });
+    db.doc("/rooms/$roomId/").snapshots().listen((event) {
       gameBloc..add(GameEventRefresh());
     });
   }

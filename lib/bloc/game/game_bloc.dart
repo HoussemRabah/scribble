@@ -13,17 +13,40 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   bool expanded = false;
   int currentPlayer = 0;
   int currentRound = 0;
+  bool myTurn = false;
+  String currentWord = "";
+  List<String> listOfWords = [];
 
   GameBloc() : super(GameInitial()) {
     on<GameEvent>((event, emit) async {
       if (event is GameEventInit) {
         if (roomBloc.roomId != null) {
           messages = await database.getMessages(roomBloc.roomId!);
-          database.messagesListener(roomBloc.roomId!);
+          database.gameListener(roomBloc.roomId!);
+          currentRound = await database.getCurrentRound(roomBloc.roomId!);
+          currentPlayer = await database.getCurrentPlayer(roomBloc.roomId!);
+          if (userBloc.user!.user!.uid == roomBloc.players[currentPlayer].id) {
+            myTurn = true;
+            listOfWords = (await database.getListOfWords(roomBloc.roomId!));
+            currentWord = "";
+          } else {
+            myTurn = false;
+          }
         }
       }
       if (event is GameEventRefresh) {
         messages = await database.getMessages(roomBloc.roomId!);
+        messages = await database.getMessages(roomBloc.roomId!);
+        currentRound = await database.getCurrentRound(roomBloc.roomId!);
+        currentPlayer = await database.getCurrentPlayer(roomBloc.roomId!);
+        if (userBloc.user!.user!.uid == roomBloc.players[currentPlayer].id) {
+          myTurn = true;
+          listOfWords = (await database.getListOfWords(roomBloc.roomId!));
+          currentWord = "";
+        } else {
+          myTurn = false;
+        }
+        currentWord = (await database.getCurrentWord(roomBloc.roomId!));
         emit(GameInitial());
       }
       if (event is GameEventExpand) {
