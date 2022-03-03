@@ -16,6 +16,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   bool myTurn = false;
   String currentWord = "";
   List<Object?> listOfWords = [];
+  int totalScore = 0;
+  int nowErrors = 0;
 
   GameBloc() : super(GameInitial()) {
     on<GameEvent>((event, emit) async {
@@ -52,6 +54,22 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           myTurn = false;
         }
         currentWord = (await database.getCurrentWord(roomBloc.roomId!));
+        emit(GameInitial());
+      }
+
+      if (event is GameEventSendMessage) {
+        int nowScore = 0;
+        await database.addMessage(roomBloc.roomId!, event.word);
+        if (currentWord.toUpperCase().contains(event.word.toUpperCase())) {
+          nowScore = 100 - nowErrors * 5;
+          if (nowScore < 0) nowScore = 0;
+          database.addPlayerScore(
+              roomBloc.roomId!, userBloc.user!.user!.uid, nowScore);
+          totalScore = totalScore + nowScore;
+        } else {
+          nowErrors++;
+        }
+
         emit(GameInitial());
       }
 

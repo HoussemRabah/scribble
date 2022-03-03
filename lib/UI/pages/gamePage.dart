@@ -3,7 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scribble/UI/widgets/buttons.dart';
 import 'package:scribble/bloc/game/game_bloc.dart';
+import 'package:scribble/bloc/roomBloc/room_bloc.dart';
 import 'package:scribble/constants.dart';
+import 'package:scribble/module/message.dart';
+import 'package:scribble/module/player.dart';
+
+import 'home.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({Key? key}) : super(key: key);
@@ -13,12 +18,16 @@ class GamePage extends StatefulWidget {
 }
 
 GameBloc gameBloc = GameBloc();
+TextEditingController? _controller = TextEditingController();
 
 class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider.value(value: gameBloc..add(GameEventInit()))],
+      providers: [
+        BlocProvider.value(value: gameBloc..add(GameEventInit())),
+        BlocProvider.value(value: roomBloc)
+      ],
       child: Scaffold(
         backgroundColor: colorBack,
         body: Column(children: [HighBar(), CentrePage(), ButtomBar()]),
@@ -63,30 +72,22 @@ class CentrePage extends StatelessWidget {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: 60,
-              height: MediaQuery.of(context).size.height - 30 - 60,
-              color: Color(0xFFE5E5E5),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Text(
-                      "000",
-                      style: textStyleError,
+            BlocBuilder<RoomBloc, RoomState>(
+              builder: (context, state) {
+                return Container(
+                  width: 60,
+                  height: MediaQuery.of(context).size.height - 30 - 60,
+                  color: Color(0xFFE5E5E5),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        for (Player player in roomBloc.players)
+                          PlayerContainer(player: player),
+                      ],
                     ),
-                    SvgPicture.asset(
-                      "assets/Skins/Boy.svg",
-                      theme: SvgTheme(currentColor: Colors.white),
-                      fit: BoxFit.fitWidth,
-                      width: 50,
-                    ),
-                    Text(
-                      "hello",
-                      style: textStyleError,
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
             AnimatedContainer(
               duration: Duration(milliseconds: 500),
@@ -94,6 +95,35 @@ class CentrePage extends StatelessWidget {
               width:
                   (gameBloc.expanded && gameBloc.currentWord != "") ? 200 : 0,
               height: MediaQuery.of(context).size.height - 90,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height - 90 - 60,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          for (Message message in gameBloc.messages)
+                            if (gameBloc.expanded) MessageBox(message: message)
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    height: 60,
+                    child: TextField(
+                      controller: _controller,
+                      onSubmitted: (word) {
+                        gameBloc..add(GameEventSendMessage(word: word));
+                        _controller!.text = "";
+                      },
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "write your reponse here..."),
+                    ),
+                  )
+                ],
+              ),
             ),
             GestureDetector(
               onTap: () {
@@ -140,6 +170,66 @@ class CentrePage extends StatelessWidget {
   }
 }
 
+class PlayerContainer extends StatelessWidget {
+  const PlayerContainer({
+    Key? key,
+    required this.player,
+  }) : super(key: key);
+
+  final Player player;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          numberFormat(player.totalScore),
+          style: textStyleError,
+        ),
+        SvgPicture.asset(
+          player.avatar,
+          theme: SvgTheme(currentColor: Colors.white),
+          fit: BoxFit.fitWidth,
+          width: 50,
+        ),
+        Text(
+          player.name,
+          style: textStyleError,
+        ),
+      ],
+    );
+  }
+}
+
+class MessageBox extends StatelessWidget {
+  const MessageBox({
+    Key? key,
+    required this.message,
+  }) : super(key: key);
+
+  final Message message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: colorFront,
+      padding: EdgeInsets.all(2.0),
+      child: Column(
+        children: [
+          Text(
+            message.username,
+            style: textStyleError,
+          ),
+          Text(
+            message.content,
+            style: textStyleSmall.copyWith(color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class HighBar extends StatelessWidget {
   const HighBar({
     Key? key,
@@ -169,4 +259,10 @@ class HighBar extends StatelessWidget {
           ]),
     );
   }
+}
+
+String numberFormat(int i) {
+  if (i < 10) return '00$i';
+  if (i < 100) return '0$i';
+  return '$i';
 }

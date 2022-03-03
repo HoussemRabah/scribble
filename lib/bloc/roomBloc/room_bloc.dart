@@ -47,9 +47,12 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         roomId = await database.createRoom(
             Round(creatorId: userBloc.user!.user!.uid, roundsNumber: rounds),
             Player(
-                name: userBloc.userName ?? getDefaultName(),
-                avatar: userBloc.avatar,
-                id: userBloc.user!.user!.uid));
+              name: userBloc.userName ?? getDefaultName(),
+              avatar: userBloc.avatar,
+              id: userBloc.user!.user!.uid,
+              totalScore: 0,
+              nowScore: 0,
+            ));
         database.playersListener(roomId!);
         emit(RoomStateLoading(process: 0.5));
         players = await database.getPlayers(roomId!);
@@ -74,9 +77,12 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         bool reponse = await database.joinRoom(
             event.roomId,
             Player(
-                name: userBloc.userName ?? getDefaultName(),
-                avatar: userBloc.avatar,
-                id: userBloc.user!.user!.uid));
+              name: userBloc.userName ?? getDefaultName(),
+              avatar: userBloc.avatar,
+              id: userBloc.user!.user!.uid,
+              totalScore: 0,
+              nowScore: 0,
+            ));
         if (reponse) {
           iamTheCreator = false;
 

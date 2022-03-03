@@ -11,8 +11,10 @@ class DatabaseRepository {
   Future<List<Message>> getMessages(String roomId) async {
     List<Message> messages = [];
     FirebaseFirestore db = FirebaseFirestore.instance;
-    QuerySnapshot messagesDoc =
-        await db.collection("/rooms/$roomId/messages").get();
+    QuerySnapshot messagesDoc = await db
+        .collection("/rooms/$roomId/messages/")
+        .orderBy("createdAt", descending: true)
+        .get();
 
     for (DocumentSnapshot message in (messagesDoc.docs)) {
       messages.add(messageFromMap(message.data() as Map));
@@ -88,11 +90,14 @@ class DatabaseRepository {
         await db.collection("/rooms/").add(round.toMap()).then((value) async {
       db.collection('${value.path}/messages').add(Message(
               content:
-                  "hello players , hada messsage zyada brk lokan mandiroch tsra bug",
+                  "hello players  hada messsage zyada brk lokan mandiroch tsra bug",
               userId: "0",
               username: "Game")
           .toMap());
-      return await db.collection('${value.path}/players').add(player.toMap());
+      await db
+          .doc('${value.path}/players/${userBloc.user!.user!.uid}')
+          .set(player.toMap());
+      return value;
     });
 
     return roundDoc.path.split('/')[1];
@@ -111,6 +116,24 @@ class DatabaseRepository {
     }
 
     return players;
+  }
+
+  addPlayerScore(String roomId, String playerId, int score) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    await db.doc("/rooms/$roomId/players/$playerId/").update({
+      'nowScore': score,
+      'totalScore': gameBloc.totalScore + score,
+    });
+  }
+
+  addMessage(String roomId, String word) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection("/rooms/$roomId/messages/").add(Message(
+            content: word,
+            userId: userBloc.user!.user!.uid,
+            username: userBloc.userName ?? "player")
+        .toMap());
   }
 
   playersListener(String roomId) {

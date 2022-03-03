@@ -14,6 +14,9 @@ class GameEventThisWord extends GameEvent {
   GameEventThisWord({required this.word}) : super();
 }
 
-class GameEventSendMessage extends GameEvent {}
+class GameEventSendMessage extends GameEvent {
+  final String word;
+  GameEventSendMessage({required this.word}) : super();
+}
 
 class GameEventNextPlayer extends GameEvent {}
