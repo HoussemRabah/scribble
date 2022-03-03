@@ -108,20 +108,21 @@ class CentrePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Container(
-                    color: Colors.white,
-                    height: 60,
-                    child: TextField(
-                      controller: _controller,
-                      onSubmitted: (word) {
-                        gameBloc..add(GameEventSendMessage(word: word));
-                        _controller!.text = "";
-                      },
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "write your reponse here..."),
-                    ),
-                  )
+                  if (!gameBloc.myTurn)
+                    Container(
+                      color: Colors.white,
+                      height: 60,
+                      child: TextField(
+                        controller: _controller,
+                        onSubmitted: (word) {
+                          gameBloc..add(GameEventSendMessage(word: word));
+                          _controller!.text = "";
+                        },
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "write your reponse here..."),
+                      ),
+                    )
                 ],
               ),
             ),
@@ -180,23 +181,32 @@ class PlayerContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          numberFormat(player.totalScore),
-          style: textStyleError,
-        ),
-        SvgPicture.asset(
-          player.avatar,
-          theme: SvgTheme(currentColor: Colors.white),
-          fit: BoxFit.fitWidth,
-          width: 50,
-        ),
-        Text(
-          player.name,
-          style: textStyleError,
-        ),
-      ],
+    return BlocBuilder<GameBloc, GameState>(
+      builder: (context, state) {
+        return Container(
+          color: (roomBloc.players[gameBloc.currentPlayer].id == player.id)
+              ? Colors.blueAccent
+              : Colors.transparent,
+          child: Column(
+            children: [
+              Text(
+                numberFormat(player.totalScore),
+                style: textStyleError,
+              ),
+              SvgPicture.asset(
+                player.avatar,
+                theme: SvgTheme(currentColor: Colors.white),
+                fit: BoxFit.fitWidth,
+                width: 50,
+              ),
+              Text(
+                player.name,
+                style: textStyleError,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -237,26 +247,30 @@ class HighBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 30,
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              child: Text(
-                "round 1",
-                style: textStyleSmall.copyWith(color: Colors.black),
-              ),
-            ),
-            Icon(Icons.home),
-            Container(
-              child: Text(
-                "round 1",
-                style: textStyleSmall.copyWith(color: Colors.black),
-              ),
-            )
-          ]),
+    return BlocBuilder<GameBloc, GameState>(
+      builder: (context, state) {
+        return Container(
+          height: 30,
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  child: Text(
+                    "round ${gameBloc.currentRound}",
+                    style: textStyleSmall.copyWith(color: Colors.black),
+                  ),
+                ),
+                Icon(Icons.home),
+                Container(
+                  child: Text(
+                    "round 1",
+                    style: textStyleSmall.copyWith(color: Colors.black),
+                  ),
+                )
+              ]),
+        );
+      },
     );
   }
 }

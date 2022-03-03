@@ -127,6 +127,12 @@ class DatabaseRepository {
     });
   }
 
+  nextPlayer(String roomId, int playerIndex) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    await db.doc("/rooms/$roomId/").update({'currentPlayer': playerIndex});
+  }
+
   addMessage(String roomId, String word) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     await db.collection("/rooms/$roomId/messages/").add(Message(
@@ -166,7 +172,7 @@ class DatabaseRepository {
 
         return false;
       } else {
-        await db.collection('/rooms/$roomId/players/').add(player.toMap());
+        await db.doc('/rooms/$roomId/players/${player.id}').set(player.toMap());
         return true;
       }
     } on FirebaseException catch (e) {

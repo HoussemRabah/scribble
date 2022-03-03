@@ -66,6 +66,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           database.addPlayerScore(
               roomBloc.roomId!, userBloc.user!.user!.uid, nowScore);
           totalScore = totalScore + nowScore;
+          add(GameEventNextPlayer());
         } else {
           nowErrors++;
         }
@@ -83,11 +84,18 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       }
       if (event is GameEventNextPlayer) {
         currentPlayer++;
-        if (currentPlayer > roomBloc.players.length) {
+        if (currentPlayer >= roomBloc.players.length) {
           currentPlayer = 0;
-          currentRound = 0;
+          database.nextPlayer(roomBloc.roomId!, currentPlayer);
+
+          add(GameEventNewRound());
+        } else {
+          database.nextPlayer(roomBloc.roomId!, currentPlayer);
         }
+        emit(GameInitial());
       }
+
+      if (event is GameEventNewRound) {}
     });
   }
 }
