@@ -22,3 +22,5 @@ class GameEventSendMessage extends GameEvent {
 class GameEventNextPlayer extends GameEvent {}
 
 class GameEventNewRound extends GameEvent {}
+
+class GameEventGameEnd extends GameEvent {}

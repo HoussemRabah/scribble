@@ -4,3 +4,5 @@ part of 'game_bloc.dart';
 abstract class GameState {}
 
 class GameInitial extends GameState {}
+
+class GameStateLoading extends GameState {}

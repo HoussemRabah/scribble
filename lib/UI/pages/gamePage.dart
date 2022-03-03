@@ -103,7 +103,16 @@ class CentrePage extends StatelessWidget {
                       child: Column(
                         children: [
                           for (Message message in gameBloc.messages)
-                            if (gameBloc.expanded) MessageBox(message: message)
+                            if (gameBloc.expanded)
+                              if (!(state is GameStateLoading))
+                                MessageBox(message: message),
+                          if ((state is GameStateLoading))
+                            Text("We have Wiiiineeeer !\n next round in 7s"),
+                          if ((state is GameStateLoading) &&
+                              (gameBloc.winner != ""))
+                            Text("${gameBloc.winner} won ! "),
+                          if (state is GameStateLoading)
+                            Text("the word was ${gameBloc.lastCurrentWord}"),
                         ],
                       ),
                     ),

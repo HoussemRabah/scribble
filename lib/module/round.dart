@@ -1,6 +1,7 @@
 class Round {
   String creatorId;
   int roundsNumber;
+  String? winner;
   Round({required this.creatorId, required this.roundsNumber});
   Map<String, Object?> toMap() {
     return {
@@ -11,6 +12,7 @@ class Round {
       "currentPlayer": 0,
       "listOfWords": ["h", "h", "h"],
       "currentWord": "",
+      "winner": "",
     };
   }
 
@@ -23,6 +25,7 @@ class Round {
       "currentPlayer": 0,
       "listOfWords": ["h", "h", "h"],
       "currentWord": "",
+      "winner": "",
     };
   }
 }

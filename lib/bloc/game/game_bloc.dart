@@ -15,16 +15,18 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   int currentRound = 0;
   bool myTurn = false;
   String currentWord = "";
+  String lastCurrentWord = "";
   List<Object?> listOfWords = [];
   int totalScore = 0;
   int nowErrors = 0;
+  String winner = "";
 
   GameBloc() : super(GameInitial()) {
     on<GameEvent>((event, emit) async {
       if (event is GameEventInit) {
         if (roomBloc.roomId != null) {
           messages = await database.getMessages(roomBloc.roomId!);
-
+          winner = await database.getWinner(roomBloc.roomId!);
           database.gameListener(roomBloc.roomId!);
 
           currentRound = await database.getCurrentRound(roomBloc.roomId!);
@@ -34,7 +36,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
             listOfWords = (await database.getListOfWords(roomBloc.roomId!));
 
             currentWord = "";
-            print("$currentWord data");
           } else {
             print(roomBloc.players[currentPlayer].id);
             myTurn = false;
@@ -43,8 +44,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       }
       if (event is GameEventRefresh) {
         messages = await database.getMessages(roomBloc.roomId!);
-        messages = await database.getMessages(roomBloc.roomId!);
         currentRound = await database.getCurrentRound(roomBloc.roomId!);
+        winner = await database.getWinner(roomBloc.roomId!);
+
         currentPlayer = await database.getCurrentPlayer(roomBloc.roomId!);
         if (userBloc.user!.user!.uid == roomBloc.players[currentPlayer].id) {
           myTurn = true;
@@ -61,17 +63,17 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         int nowScore = 0;
         await database.addMessage(roomBloc.roomId!, event.word);
         if (currentWord.toUpperCase().contains(event.word.toUpperCase())) {
+          lastCurrentWord = currentWord;
           nowScore = 100 - nowErrors * 5;
           if (nowScore < 0) nowScore = 0;
-          database.addPlayerScore(
-              roomBloc.roomId!, userBloc.user!.user!.uid, nowScore);
+          database.addPlayerScore(userBloc.userName!, roomBloc.roomId!,
+              userBloc.user!.user!.uid, nowScore);
           totalScore = totalScore + nowScore;
           add(GameEventNextPlayer());
         } else {
           nowErrors++;
+          emit(GameInitial());
         }
-
-        emit(GameInitial());
       }
 
       if (event is GameEventThisWord) {
@@ -86,16 +88,31 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         currentPlayer++;
         if (currentPlayer >= roomBloc.players.length) {
           currentPlayer = 0;
-          database.nextPlayer(roomBloc.roomId!, currentPlayer);
+          await database.nextPlayer(roomBloc.roomId!, currentPlayer);
 
           add(GameEventNewRound());
         } else {
           database.nextPlayer(roomBloc.roomId!, currentPlayer);
+          emit(GameInitial());
         }
-        emit(GameInitial());
       }
 
-      if (event is GameEventNewRound) {}
+      if (event is GameEventNewRound) {
+        emit(GameStateLoading());
+        currentRound++;
+        if (currentRound >= roomBloc.rounds) {
+          database.gameEnd(roomBloc.roomId!);
+          Future.delayed(Duration(seconds: 7));
+
+          add(GameEventGameEnd());
+        } else {
+          await database.nextRound(roomBloc.roomId!, currentRound);
+          Future.delayed(Duration(seconds: 7));
+          emit(GameInitial());
+        }
+      }
+
+      if (event is GameEventGameEnd) {}
     });
   }
 }
