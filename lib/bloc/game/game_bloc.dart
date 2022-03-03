@@ -15,19 +15,22 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   int currentRound = 0;
   bool myTurn = false;
   String currentWord = "";
-  List<String> listOfWords = [];
+  List<Object?> listOfWords = [];
 
   GameBloc() : super(GameInitial()) {
     on<GameEvent>((event, emit) async {
       if (event is GameEventInit) {
         if (roomBloc.roomId != null) {
           messages = await database.getMessages(roomBloc.roomId!);
+
           database.gameListener(roomBloc.roomId!);
+
           currentRound = await database.getCurrentRound(roomBloc.roomId!);
           currentPlayer = await database.getCurrentPlayer(roomBloc.roomId!);
           if (userBloc.user!.user!.uid == roomBloc.players[currentPlayer].id) {
             myTurn = true;
             listOfWords = (await database.getListOfWords(roomBloc.roomId!));
+
             currentWord = "";
             print("$currentWord data");
           } else {
@@ -51,6 +54,11 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         currentWord = (await database.getCurrentWord(roomBloc.roomId!));
         emit(GameInitial());
       }
+
+      if (event is GameEventThisWord) {
+        await database.setWord(roomBloc.roomId!, event.word);
+      }
+
       if (event is GameEventExpand) {
         expanded = !expanded;
         emit(GameInitial());

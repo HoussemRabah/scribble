@@ -91,7 +91,8 @@ class CentrePage extends StatelessWidget {
             AnimatedContainer(
               duration: Duration(milliseconds: 500),
               color: Color(0xFFE5E5E5),
-              width: gameBloc.expanded ? 200 : 0,
+              width:
+                  (gameBloc.expanded && gameBloc.currentWord != "") ? 200 : 0,
               height: MediaQuery.of(context).size.height - 90,
             ),
             GestureDetector(
@@ -119,10 +120,15 @@ class CentrePage extends StatelessWidget {
                       "CHOOSE A WORD",
                       style: textStyleBig,
                     ),
-                    for (String word in gameBloc.listOfWords)
+                    for (Object? word in gameBloc.listOfWords)
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0.0, 0, 0, 8.0),
-                        child: Button(text: word, function: () {}),
+                        child: Button(
+                            text: word.toString(),
+                            function: () {
+                              gameBloc
+                                ..add(GameEventThisWord(word: word.toString()));
+                            }),
                       ),
                   ],
                 ),

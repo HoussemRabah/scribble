@@ -11,13 +11,11 @@ class DatabaseRepository {
   Future<List<Message>> getMessages(String roomId) async {
     List<Message> messages = [];
     FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentSnapshot messagesDoc =
-        await db.collection("/rooms/$roomId/").doc('messages').get();
+    QuerySnapshot messagesDoc =
+        await db.collection("/rooms/$roomId/messages").get();
 
-    if (messagesDoc.exists) {
-      for (Map message in (messagesDoc.data() as List)) {
-        messages.add(messageFromMap(message));
-      }
+    for (DocumentSnapshot message in (messagesDoc.docs)) {
+      messages.add(messageFromMap(message.data() as Map));
     }
     return messages;
   }
@@ -44,13 +42,13 @@ class DatabaseRepository {
     return currentPlayer;
   }
 
-  Future<List<String>> getListOfWords(String roomId) async {
-    List<String> listOfWords = [];
+  Future<List<Object?>> getListOfWords(String roomId) async {
+    List<Object?> listOfWords = [];
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentSnapshot doc = await db.doc("/rooms/$roomId/").get();
 
     if (doc.exists) {
-      listOfWords = (doc.data()! as Map)["listOfWords"];
+      listOfWords = ((doc.data()! as Map)["listOfWords"]);
     }
     return listOfWords;
   }
@@ -64,6 +62,14 @@ class DatabaseRepository {
       currentWord = (doc.data()! as Map)["currentWord"];
     }
     return currentWord;
+  }
+
+  setWord(String roomId, String word) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    await db.doc("/rooms/$roomId/").update({
+      'currentWord': word,
+    });
   }
 
   gameListener(String roomId) {
@@ -80,6 +86,12 @@ class DatabaseRepository {
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference roundDoc =
         await db.collection("/rooms/").add(round.toMap()).then((value) async {
+      db.collection('${value.path}/messages').add(Message(
+              content:
+                  "hello players , hada messsage zyada brk lokan mandiroch tsra bug",
+              userId: "0",
+              username: "Game")
+          .toMap());
       return await db.collection('${value.path}/players').add(player.toMap());
     });
 
