@@ -1,10 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:scribble/UI/pages/gamePage.dart';
 import 'package:scribble/UI/pages/home.dart';
+import 'package:scribble/bloc/game/game_bloc.dart';
 import 'package:scribble/bloc/roomBloc/room_bloc.dart';
+import 'package:scribble/module/message.dart';
 import 'package:scribble/module/player.dart';
 import 'package:scribble/module/round.dart';
 
 class DatabaseRepository {
+  Future<List<Message>> getMessages(String roomId) async {
+    List<Message> messages = [];
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentSnapshot messagesDoc =
+        await db.collection("/rooms/$roomId/").doc('messages').get();
+
+    if (messagesDoc.exists) {
+      for (Map message in (messagesDoc.data() as List)) {
+        messages.add(messageFromMap(message));
+      }
+    }
+    return messages;
+  }
+
+  messagesListener(String roomId) {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db.collection("/rooms/$roomId/messages/").snapshots().listen((event) {
+      gameBloc..add(GameEventRefresh());
+    });
+  }
+
   Future<String> createRoom(Round round, Player player) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference roundDoc =
@@ -36,8 +60,8 @@ class DatabaseRepository {
       roomBloc..add(RoomEventRefresh());
     });
 
-    db.collection("/rooms/$roomId").snapshots().listen((event) {
-      if (event.docs[0]['gameOn'] as bool) {
+    db.doc("/rooms/$roomId/").snapshots().listen((event) {
+      if (event.data()!['gameOn'] as bool) {
         roomBloc..add(RoomEventGameOn());
       }
     });
