@@ -18,7 +18,7 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider.value(value: gameBloc)],
+      providers: [BlocProvider.value(value: gameBloc..add(GameEventInit()))],
       child: Scaffold(
         backgroundColor: colorBack,
         body: Column(children: [HighBar(), CentrePage(), ButtomBar()]),

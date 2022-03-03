@@ -29,7 +29,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
             myTurn = true;
             listOfWords = (await database.getListOfWords(roomBloc.roomId!));
             currentWord = "";
+            print("$currentWord data");
           } else {
+            print(roomBloc.players[currentPlayer].id);
             myTurn = false;
           }
         }
