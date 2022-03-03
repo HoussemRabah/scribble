@@ -96,7 +96,7 @@ class CentrePage extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                gameBloc.expanded = !gameBloc.expanded;
+                gameBloc..add(GameEventExpand());
               },
               child: Container(
                 height: 80,
@@ -118,7 +118,13 @@ class CentrePage extends StatelessWidget {
                       style: textStyleBig,
                     ),
                     Button(text: "word 1", function: () {}),
+                    SizedBox(
+                      height: 8.0,
+                    ),
                     Button(text: "word 2", function: () {}),
+                    SizedBox(
+                      height: 8.0,
+                    ),
                     Button(text: "word 2", function: () {}),
                   ],
                 ),
