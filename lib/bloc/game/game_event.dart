@@ -3,7 +3,10 @@ part of 'game_bloc.dart';
 @immutable
 abstract class GameEvent {}
 
-class GameEventInit extends GameEvent {}
+class GameEventInit extends GameEvent {
+  BuildContext context;
+  GameEventInit(this.context) : super();
+}
 
 class GameEventRefresh extends GameEvent {}
 

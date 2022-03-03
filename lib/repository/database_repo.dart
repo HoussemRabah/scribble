@@ -77,6 +77,25 @@ class DatabaseRepository {
     return winner;
   }
 
+  Future<Timestamp?> getTimeBegin(String roomId) async {
+    Timestamp? beginTime;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentSnapshot doc = await db.doc("/rooms/$roomId/").get();
+
+    if (doc.exists) {
+      beginTime = (doc.data()! as Map)["timeBegin"];
+    }
+    return beginTime;
+  }
+
+  setTimeBegin(String roomId, Timestamp timeBegin) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    await db.doc("/rooms/$roomId/").update({
+      'timeBegin': timeBegin,
+    });
+  }
+
   setWord(String roomId, String word) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -143,7 +162,8 @@ class DatabaseRepository {
   nextPlayer(String roomId, int playerIndex) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
 
-    await db.doc("/rooms/$roomId/").update({'currentPlayer': playerIndex});
+    await db.doc("/rooms/$roomId/").update(
+        {'currentPlayer': playerIndex, "timeBegin": null, "currentWord": ""});
   }
 
   nextRound(String roomId, int currentRound) async {

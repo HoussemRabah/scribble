@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:scribble/UI/widgets/buttons.dart';
 import 'package:scribble/bloc/game/game_bloc.dart';
 import 'package:scribble/bloc/roomBloc/room_bloc.dart';
@@ -25,7 +27,7 @@ class _GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider.value(value: gameBloc..add(GameEventInit())),
+        BlocProvider.value(value: gameBloc..add(GameEventInit(context))),
         BlocProvider.value(value: roomBloc)
       ],
       child: Scaffold(
@@ -271,16 +273,29 @@ class HighBar extends StatelessWidget {
                   ),
                 ),
                 Icon(Icons.home),
-                Container(
-                  child: Text(
-                    "round 1",
-                    style: textStyleSmall.copyWith(color: Colors.black),
-                  ),
-                )
+                if (gameBloc.beginTime != null)
+                  Container(child: new Counter(time: gameBloc.beginTime!)),
+                if (gameBloc.beginTime == null) Text('wait...'),
               ]),
         );
       },
     );
+  }
+}
+
+class Counter extends StatelessWidget {
+  final Timestamp time;
+  const Counter({Key? key, required this.time}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TimerCountdown(
+        onEnd: () {
+          gameBloc.add(GameEventNextPlayer());
+        },
+        format: CountDownTimerFormat.secondsOnly,
+        enableDescriptions: false,
+        endTime: time.toDate().add(Duration(seconds: 80)));
   }
 }
 
