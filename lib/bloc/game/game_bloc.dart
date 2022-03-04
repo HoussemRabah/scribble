@@ -62,7 +62,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         currentRound = await database.getCurrentRound(roomBloc.roomId!);
         winner = await database.getWinner(roomBloc.roomId!);
         beginTime = await database.getTimeBegin(roomBloc.roomId!);
-        if (!myTurn) draw = await database.getDraw(roomBloc.roomId!);
         currentPlayer = await database.getCurrentPlayer(roomBloc.roomId!);
         if (userBloc.user!.user!.uid == roomBloc.players[currentPlayer].id) {
           myTurn = true;
@@ -70,6 +69,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           currentWord = "";
         } else {
           myTurn = false;
+          draw = await database.getDraw(roomBloc.roomId!);
+          print("not my");
         }
         currentWord = (await database.getCurrentWord(roomBloc.roomId!));
         emit(GameInitial());

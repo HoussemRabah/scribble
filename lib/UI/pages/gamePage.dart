@@ -42,19 +42,24 @@ class _GamePageState extends State<GamePage> {
         body: Stack(children: [
           GestureDetector(
             onPanStart: (e) {
-              gameBloc.draw.addDraw([e.globalPosition], color);
+              if (gameBloc.myTurn)
+                gameBloc.draw.addDraw([e.globalPosition], color);
             },
             onPanUpdate: (e) {
-              gameBloc.draw.updateDraw(e.globalPosition);
+              if (gameBloc.myTurn) gameBloc.draw.updateDraw(e.globalPosition);
             },
             onPanEnd: (e) {
-              gameBloc..add(GameEventPaintChange());
+              if (gameBloc.myTurn) gameBloc..add(GameEventPaintChange());
             },
-            child: CustomPaint(
-              size: Size(MediaQuery.of(context).size.width,
-                  MediaQuery.of(context).size.height - 30),
-              painter: Painter(gameBloc.draw),
-              willChange: true,
+            child: BlocBuilder<GameBloc, GameState>(
+              builder: (context, state) {
+                return CustomPaint(
+                  size: Size(MediaQuery.of(context).size.width,
+                      MediaQuery.of(context).size.height - 30),
+                  painter: Painter(gameBloc.draw),
+                  willChange: true,
+                );
+              },
             ),
           ),
           Column(children: [HighBar(), CentrePage(), ButtomBar()])
@@ -77,10 +82,23 @@ class ButtomBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Icon(Icons.remove),
-          Icon(Icons.arrow_left),
+          GestureDetector(
+              onTap: () {
+                if (gameBloc.myTurn) gameBloc.draw.removeDraw();
+              },
+              child: Icon(Icons.remove)),
+          GestureDetector(
+              onTap: () {
+                if (gameBloc.myTurn) gameBloc.draw.undoDraw();
+              },
+              child: Icon(Icons.arrow_left)),
           Icon(Icons.architecture_sharp),
-          Icon(Icons.color_lens),
+          GestureDetector(
+              onTap: () {
+                if (gameBloc.myTurn) {}
+                ;
+              },
+              child: Icon(Icons.color_lens)),
           Icon(Icons.add),
         ],
       ),

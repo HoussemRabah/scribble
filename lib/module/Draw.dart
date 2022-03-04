@@ -44,7 +44,7 @@ class Draw {
     return data;
   }
 
-  fromText(String data) {
+  Draw fromText(String data) {
     String pointsText = "";
     String colorsText = "";
     if (data.isNotEmpty) {
@@ -60,21 +60,29 @@ class Draw {
       for (String packText in packsText) {
         List<String> offsetsText = packText.split(";");
         List<Offset> pack = [];
+
         for (String offsetText in offsetsText) {
-          pack.add(Offset(double.parse(offsetText.split(",")[0]),
-              double.parse(offsetText.split(",")[1])));
+          if (offsetText != "") {
+            String x = offsetText.split(",")[0];
+            String y = offsetText.split(",")[1];
+            if (double.tryParse(x) != null && double.tryParse(y) != null)
+              pack.add(Offset(double.parse(x), double.parse(y)));
+          }
         }
         points.add(pack);
       }
       List<String> colorsPackText = colorsText.split(",");
       for (String color in colorsPackText) {
-        colors.add(Color.fromARGB(
-            int.parse(color.split(";")[0]),
-            int.parse(color.split(";")[1]),
-            int.parse(color.split(";")[2]),
-            int.parse(color.split(";")[3])));
+        if (color != "")
+          colors.add(Color.fromARGB(
+              int.parse(color.split(";")[0]),
+              int.parse(color.split(";")[1]),
+              int.parse(color.split(";")[2]),
+              int.parse(color.split(";")[3])));
       }
     }
+
+    return this;
   }
 
   toMap() => {"draw": toText()};
