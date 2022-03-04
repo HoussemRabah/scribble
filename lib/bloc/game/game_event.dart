@@ -12,6 +12,8 @@ class GameEventRefresh extends GameEvent {}
 
 class GameEventExpand extends GameEvent {}
 
+class GameEventPaintChange extends GameEvent {}
+
 class GameEventThisWord extends GameEvent {
   final String word;
   GameEventThisWord({required this.word}) : super();

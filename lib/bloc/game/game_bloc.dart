@@ -1,8 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_drawing_board/flutter_drawing_board.dart';
 import 'package:meta/meta.dart';
+import 'package:painter2/painter2.dart';
 import 'package:scribble/UI/pages/home.dart';
+import 'package:scribble/module/Draw.dart';
 import 'package:scribble/module/message.dart';
 import 'package:scribble/repository/database_repo.dart';
 
@@ -24,9 +29,14 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   String winner = "";
   Timestamp? beginTime;
   BuildContext? context;
+  Draw draw = Draw(points: [], colors: []);
 
   GameBloc() : super(GameInitial()) {
     on<GameEvent>((event, emit) async {
+      if (event is GameEventPaintChange) {
+        if (myTurn) database.refreshDraw(roomBloc.roomId!, draw);
+      }
+
       if (event is GameEventInit) {
         if (roomBloc.roomId != null) {
           context = event.context;
@@ -52,6 +62,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         currentRound = await database.getCurrentRound(roomBloc.roomId!);
         winner = await database.getWinner(roomBloc.roomId!);
         beginTime = await database.getTimeBegin(roomBloc.roomId!);
+        if (!myTurn) draw = await database.getDraw(roomBloc.roomId!);
         currentPlayer = await database.getCurrentPlayer(roomBloc.roomId!);
         if (userBloc.user!.user!.uid == roomBloc.players[currentPlayer].id) {
           myTurn = true;

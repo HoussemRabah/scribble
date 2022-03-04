@@ -3,6 +3,7 @@ import 'package:scribble/UI/pages/gamePage.dart';
 import 'package:scribble/UI/pages/home.dart';
 import 'package:scribble/bloc/game/game_bloc.dart';
 import 'package:scribble/bloc/roomBloc/room_bloc.dart';
+import 'package:scribble/module/Draw.dart';
 import 'package:scribble/module/message.dart';
 import 'package:scribble/module/player.dart';
 import 'package:scribble/module/round.dart';
@@ -208,6 +209,17 @@ class DatabaseRepository {
   startTheGame(String roundId, Round round) {
     FirebaseFirestore db = FirebaseFirestore.instance;
     db.doc("/rooms/$roundId").update(round.gameOn());
+  }
+
+  refreshDraw(String roundId, Draw draw) {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db.doc("/rooms/$roundId").update(draw.toMap());
+  }
+
+  Future<Draw> getDraw(String roundId) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentSnapshot data = await db.doc("/rooms/$roundId").get();
+    return Draw(colors: [], points: []).fromText((data.data() as Map)["draw"]);
   }
 
   gameEnd(String roomId) async {

@@ -1,12 +1,17 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_drawing_board/flutter_drawing_board.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
+import 'package:painter2/painter2.dart';
 import 'package:scribble/UI/widgets/buttons.dart';
 import 'package:scribble/bloc/game/game_bloc.dart';
 import 'package:scribble/bloc/roomBloc/room_bloc.dart';
 import 'package:scribble/constants.dart';
+import 'package:scribble/module/Draw.dart';
 import 'package:scribble/module/message.dart';
 import 'package:scribble/module/player.dart';
 
@@ -18,6 +23,8 @@ class GamePage extends StatefulWidget {
   @override
   State<GamePage> createState() => _GamePageState();
 }
+
+Color color = Colors.black;
 
 GameBloc gameBloc = GameBloc();
 TextEditingController? _controller = TextEditingController();
@@ -32,7 +39,26 @@ class _GamePageState extends State<GamePage> {
       ],
       child: Scaffold(
         backgroundColor: colorBack,
-        body: Column(children: [HighBar(), CentrePage(), ButtomBar()]),
+        body: Stack(children: [
+          GestureDetector(
+            onPanStart: (e) {
+              gameBloc.draw.addDraw([e.globalPosition], color);
+            },
+            onPanUpdate: (e) {
+              gameBloc.draw.updateDraw(e.globalPosition);
+            },
+            onPanEnd: (e) {
+              gameBloc..add(GameEventPaintChange());
+            },
+            child: CustomPaint(
+              size: Size(MediaQuery.of(context).size.width,
+                  MediaQuery.of(context).size.height - 30),
+              painter: Painter(gameBloc.draw),
+              willChange: true,
+            ),
+          ),
+          Column(children: [HighBar(), CentrePage(), ButtomBar()])
+        ]),
       ),
     );
   }
@@ -303,4 +329,26 @@ String numberFormat(int i) {
   if (i < 10) return '00$i';
   if (i < 100) return '0$i';
   return '$i';
+}
+
+class Painter extends CustomPainter {
+  Draw draw;
+  Painter(this.draw);
+  @override
+  void paint(Canvas canvas, Size size) {
+    int index = 0;
+    for (List<Offset> pack in draw.points) {
+      for (int i = 0; i < pack.length - 1; i++) {
+        canvas.drawLine(
+            pack[i], pack[i + 1], Paint()..color = draw.colors[index]);
+      }
+      index++;
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    // TODO: implement shouldRepaint
+    return (draw != gameBloc.draw);
+  }
 }

@@ -16,6 +16,7 @@ class Round {
       "currentWord": "",
       "winner": "",
       "timeBegin": null,
+      "draw": ""
     };
   }
 
@@ -30,6 +31,7 @@ class Round {
       "currentWord": "",
       "winner": "",
       "timeBegin": null,
+      "draw": ""
     };
   }
 }
