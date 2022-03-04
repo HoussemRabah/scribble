@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Scribble MC',
       theme: ThemeData(
+        fontFamily: 'upheavtt',
         primaryColor: colorMain,
       ),
       home: const Home(),
