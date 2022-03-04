@@ -1,5 +1,6 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter/material.dart';
+import 'package:scribble/UI/widgets/decor.dart';
 import 'package:scribble/constants.dart';
 
 class Button extends StatelessWidget {
@@ -14,16 +15,20 @@ class Button extends StatelessWidget {
       onTap: () {
         function();
       },
-      child: Container(
-        padding: EdgeInsets.all(8.0),
-        width: 250,
-        height: 53,
-        decoration: BoxDecoration(
-          color: colorFront,
-        ),
-        child: Text(
-          text,
-          style: textStyleBig,
+      child: Cadre(
+        child: Container(
+          padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+          width: 250,
+          decoration: BoxDecoration(
+            color: colorFront,
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: textStyleBig,
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
       ),
     );
@@ -42,16 +47,21 @@ class ButtonSqaure extends StatelessWidget {
       onTap: () {
         function();
       },
-      child: Container(
-        padding: EdgeInsets.all(8.0),
-        width: 53,
-        height: 53,
-        decoration: BoxDecoration(
-          color: colorFront,
-        ),
-        child: Text(
-          text,
-          style: textStyleBig,
+      child: Cadre(
+        child: Container(
+          padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+          width: 53,
+          height: 53,
+          decoration: BoxDecoration(
+            color: colorFront,
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: textStyleBig,
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
       ),
     );
@@ -70,25 +80,29 @@ class ButtonRound extends StatelessWidget {
       onTap: () {
         function();
       },
-      child: Container(
-        padding: EdgeInsets.all(8.0),
-        width: 90,
-        height: 90,
-        decoration: BoxDecoration(
-          color: colorFront,
-        ),
-        child: Column(
-          children: [
-            Text(
-              "rounds",
-              style: textStyleSmall,
-              textAlign: TextAlign.center,
+      child: Cadre(
+        child: Container(
+          padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+          width: 90,
+          decoration: BoxDecoration(
+            color: colorFront,
+          ),
+          child: Center(
+            child: Column(
+              children: [
+                Text(
+                  "rounds",
+                  style: textStyleSmall,
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  text,
+                  style: textStyleBig,
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
-            Text(
-              text,
-              style: textStyleBig,
-            ),
-          ],
+          ),
         ),
       ),
     );

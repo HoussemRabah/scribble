@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scribble/UI/pages/gamePage.dart';
 import 'package:scribble/UI/pages/home.dart';
 import 'package:scribble/UI/widgets/buttons.dart';
+import 'package:scribble/UI/widgets/decor.dart';
 import 'package:scribble/UI/widgets/laoding.dart';
 import 'package:scribble/bloc/roomBloc/room_bloc.dart';
 import 'package:scribble/bloc/userBloc/user_bloc.dart';
@@ -65,19 +67,43 @@ class JoinView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        TextField(
-          onSubmitted: (code) {
-            roomBloc..add(RoomEventJoinRoomStart(roomId: code));
-          },
-          style: textStyleBig,
-          textAlign: TextAlign.center,
-          decoration:
-              InputDecoration(border: InputBorder.none, hintText: "ROOM CODE"),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            onSubmitted: (code) {
+              roomBloc..add(RoomEventJoinRoomStart(roomId: code));
+            },
+            style: textStyleBig,
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "ROOM CODE",
+                hintStyle:
+                    textStyleBig.copyWith(color: colorBlack, shadows: [])),
+          ),
         ),
         Text(
           roomBloc.error,
           style: textStyleError,
         ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              roomBloc..emit(RoomInitial());
+            },
+            child: Cadre(
+              child: Container(
+                color: colorBack,
+                width: 80,
+                height: 50,
+                padding: EdgeInsets.all(8.0),
+                child: Center(child: Icon(Icons.arrow_left)),
+              ),
+            ),
+          ),
+        )
       ],
     );
   }
@@ -92,20 +118,33 @@ class NewRoomView extends StatelessWidget {
     return Column(
       children: [
         SelectableText(
-          "ROOM ID : ${state.id}",
+          "ROOM ID : \n${state.id}",
           style: textStyleBig,
           textAlign: TextAlign.center,
+        ),
+        SizedBox(
+          height: 32.0,
         ),
         // players
         PlayersInRoom(state: state),
 
+        SizedBox(
+          height: 32.0,
+        ),
         // play
-        Button(
-            text: roomBloc.iamTheCreator ? "play" : "exit",
-            function: () {
-              if (roomBloc.iamTheCreator) {
+        if (roomBloc.iamTheCreator)
+          Button(
+              text: "play",
+              function: () {
                 roomBloc..add(RoomEventStartTheGame());
-              }
+              }),
+        SizedBox(
+          height: 8.0,
+        ),
+        Button(
+            text: "exit",
+            function: () {
+              roomBloc..emit(RoomInitial());
             })
       ],
     );
@@ -132,6 +171,9 @@ class PlayersInRoom extends StatelessWidget {
                   theme: SvgTheme(currentColor: Colors.white),
                   fit: BoxFit.fitWidth,
                   width: 49),
+              SizedBox(
+                height: 8.0,
+              ),
               Text(
                 player.name,
                 style: textStyleSmall.copyWith(
@@ -162,23 +204,35 @@ class _InitialViewState extends State<InitialView> {
       children: [
         BlocBuilder<UserBloc, UserState>(
           builder: (context, state) {
-            return AvtarSelctor();
+            return Padding(
+              padding: const EdgeInsets.only(top: 32.0, bottom: 32.0),
+              child: AvtarSelctor(),
+            );
           },
         ),
         Text(userBloc.userName ?? "ops null error ):",
             style: textStyleBig.copyWith(
               color: Colors.white,
             )),
+        SizedBox(
+          height: 8.0,
+        ),
         Button(
             text: "CREATE ROOM",
             function: () {
               roomBloc..add(RoomEventNewRoom());
             }),
+        SizedBox(
+          height: 8.0,
+        ),
         Button(
             text: "JOIN ROOM",
             function: () {
               roomBloc..add(RoomEventJoinRoom());
             }),
+        SizedBox(
+          height: 32.0,
+        ),
         BlocBuilder<RoomBloc, RoomState>(
           builder: (context, state) {
             return Row(
