@@ -1,4 +1,3 @@
-import 'package:firebase/firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:scribble/UI/widgets/decor.dart';
 import 'package:scribble/constants.dart';

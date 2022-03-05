@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Round {
   String creatorId;
   int roundsNumber;
