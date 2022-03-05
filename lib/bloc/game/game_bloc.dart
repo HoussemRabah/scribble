@@ -69,7 +69,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         }
         currentWord = (await database.getCurrentWord(roomBloc.roomId!));
         emit(GameInitial());
-        if (currentRound >= roomBloc.rounds) {
+
+        if (currentRound > roomBloc.rounds) {
           add(GameEventGameEnd());
         }
       }
