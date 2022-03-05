@@ -57,7 +57,6 @@ class _GamePageState extends State<GamePage> {
                   size: Size(MediaQuery.of(context).size.width,
                       MediaQuery.of(context).size.height - 30),
                   painter: Painter(gameBloc.draw),
-                  willChange: true,
                 );
               },
             ),
@@ -97,15 +96,17 @@ class ButtomBar extends StatelessWidget {
                   child: Icon(Icons.arrow_left)),
               Icon(Icons.architecture_sharp),
               GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (gameBloc.myTurn) {
                       showDialog(
                           context: context,
-                          builder: (context) => MaterialColorPicker(
-                                allowShades: false,
-                                onColorChange: (newColor) {
-                                  color = newColor;
-                                },
+                          builder: (context) => Dialog(
+                                child: MaterialColorPicker(
+                                  allowShades: false,
+                                  onColorChange: (newColor) {
+                                    color = newColor;
+                                  },
+                                ),
                               ));
                     }
                     ;
@@ -282,7 +283,7 @@ class PlayerContainer extends StatelessWidget {
                   player.name,
                   textAlign: TextAlign.center,
                   style: textStyleSmall
-                      .copyWith(color: colorMain, fontSize: 10.0, shadows: []),
+                      .copyWith(color: colorBlack, fontSize: 10.0, shadows: []),
                 ),
               ),
               SizedBox(
@@ -413,9 +414,9 @@ class Painter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     int index = 0;
     for (List<Offset> pack in draw.points) {
-      for (int i = 0; i < pack.length - 1; i++) {
+      for (int i = 0; i < pack.length - 3; i = i + 3) {
         canvas.drawLine(
-            pack[i], pack[i + 1], Paint()..color = draw.colors[index]);
+            pack[i], pack[i + 3], Paint()..color = draw.colors[index]);
       }
       index++;
     }

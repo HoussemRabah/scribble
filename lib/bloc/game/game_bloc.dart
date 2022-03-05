@@ -27,6 +27,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   BuildContext? context;
   Draw draw = Draw(points: [], colors: []);
 
+// fix game end
+// performnace
   GameBloc() : super(GameInitial()) {
     on<GameEvent>((event, emit) async {
       if (event is GameEventPaintChange) {
