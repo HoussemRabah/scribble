@@ -27,11 +27,12 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   BuildContext? context;
   Draw draw = Draw(points: [], colors: []);
 
-// fix game end
-// performnace
+//TODO : fix bugs , add winner UI , add repeat button
+
   GameBloc() : super(GameInitial()) {
     on<GameEvent>((event, emit) async {
       if (event is GameEventPaintChange) {
+        //upload the new draw
         if (myTurn) database.refreshDraw(roomBloc.roomId!, draw);
       }
 
@@ -56,6 +57,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         }
       }
       if (event is GameEventRefresh) {
+        //get data from the listen
         messages = await database.getMessages(roomBloc.roomId!);
         currentRound = await database.getCurrentRound(roomBloc.roomId!);
         winner = await database.getWinner(roomBloc.roomId!);
@@ -81,11 +83,14 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       }
 
       if (event is GameEventSendMessage) {
+        // upload message
         int nowScore = 0;
         await database.addMessage(roomBloc.roomId!, event.word);
+
+        // check if message contains the reponse
         if (currentWord.toUpperCase().contains(event.word.toUpperCase())) {
           lastCurrentWord = currentWord;
-          nowScore = 100 - nowErrors * 5;
+          nowScore = 100 - nowErrors * 5; // points formula
           if (nowScore < 0) nowScore = 0;
           database.addPlayerScore(userBloc.userName!, roomBloc.roomId!,
               userBloc.user!.user!.uid, nowScore);
