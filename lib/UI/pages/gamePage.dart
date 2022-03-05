@@ -39,14 +39,16 @@ class _GamePageState extends State<GamePage> {
         body: Stack(children: [
           GestureDetector(
             onPanStart: (e) {
-              if (gameBloc.myTurn)
+              if (gameBloc.myTurn && gameBloc.currentWord != "")
                 gameBloc.draw.addDraw([e.globalPosition], color);
             },
             onPanUpdate: (e) {
-              if (gameBloc.myTurn) gameBloc.draw.updateDraw(e.globalPosition);
+              if (gameBloc.myTurn && gameBloc.currentWord != "")
+                gameBloc.draw.updateDraw(e.globalPosition);
             },
             onPanEnd: (e) {
-              if (gameBloc.myTurn) gameBloc..add(GameEventPaintChange());
+              if (gameBloc.myTurn && gameBloc.currentWord != "")
+                gameBloc..add(GameEventPaintChange());
             },
             child: BlocBuilder<GameBloc, GameState>(
               builder: (context, state) {
@@ -198,9 +200,7 @@ class CentrePage extends StatelessWidget {
                 child: Icon(Icons.arrow_right),
               ),
             ),
-            if (!gameBloc.expanded &&
-                gameBloc.myTurn &&
-                gameBloc.currentWord == "")
+            if (gameBloc.myTurn && gameBloc.currentWord == "")
               AnimatedContainer(
                 duration: Duration(milliseconds: 500),
                 width: MediaQuery.of(context).size.width - 60 - 8.0 - 8.0 - 50,
@@ -246,6 +246,7 @@ class PlayerContainer extends StatelessWidget {
     return BlocBuilder<GameBloc, GameState>(
       builder: (context, state) {
         return Container(
+          width: 60.0,
           color: (roomBloc.players[gameBloc.currentPlayer].id == player.id)
               ? Colors.blueAccent
               : Colors.transparent,

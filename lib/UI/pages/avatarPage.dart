@@ -74,7 +74,6 @@ class JoinView extends StatelessWidget {
             },
             style: textStyleBig,
             textAlign: TextAlign.center,
-            maxLines: 3,
             decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: "ROOM CODE",

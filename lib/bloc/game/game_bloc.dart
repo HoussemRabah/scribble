@@ -1,5 +1,3 @@
-
-
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -117,12 +115,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         emit(GameStateLoading());
         currentRound++;
         if (currentRound >= roomBloc.rounds) {
-          // database.gameEnd(roomBloc.roomId!);
-
           add(GameEventGameEnd());
         } else {
           await database.nextRound(roomBloc.roomId!, currentRound);
-          Future.delayed(Duration(seconds: 7));
           emit(GameInitial());
         }
       }
