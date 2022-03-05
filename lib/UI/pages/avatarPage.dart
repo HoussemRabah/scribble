@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:scribble/UI/pages/gamePage.dart';
 import 'package:scribble/UI/pages/home.dart';
 import 'package:scribble/UI/widgets/buttons.dart';
 import 'package:scribble/UI/widgets/decor.dart';
