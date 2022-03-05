@@ -29,6 +29,14 @@ TextEditingController? _controller = TextEditingController();
 
 class _GamePageState extends State<GamePage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    gameBloc.close();
+    gameBloc = GameBloc();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
@@ -105,6 +113,7 @@ class ButtomBar extends StatelessWidget {
                                   allowShades: false,
                                   onColorChange: (newColor) {
                                     color = newColor;
+                                    print(color);
                                   },
                                 ),
                               ));
@@ -414,9 +423,9 @@ class Painter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     int index = 0;
     for (List<Offset> pack in draw.points) {
-      for (int i = 0; i < pack.length - 3; i = i + 3) {
+      for (int i = 0; i < pack.length - 10; i = i + 10) {
         canvas.drawLine(
-            pack[i], pack[i + 3], Paint()..color = draw.colors[index]);
+            pack[i], pack[i + 10], Paint()..color = draw.colors[index]);
       }
       index++;
     }
