@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_drawing_board/flutter_drawing_board.dart';
 import 'package:meta/meta.dart';
 import 'package:painter2/painter2.dart';
+import 'package:scribble/UI/pages/gameOverPage.dart';
 import 'package:scribble/UI/pages/home.dart';
 import 'package:scribble/module/Draw.dart';
 import 'package:scribble/module/message.dart';
@@ -119,7 +120,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         emit(GameStateLoading());
         currentRound++;
         if (currentRound >= roomBloc.rounds) {
-          database.gameEnd(roomBloc.roomId!);
+          // database.gameEnd(roomBloc.roomId!);
 
           add(GameEventGameEnd());
         } else {
@@ -130,8 +131,10 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       }
 
       if (event is GameEventGameEnd) {
-        Navigator.of(context!)
-            .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+        Navigator.of(context!).pushReplacement(MaterialPageRoute(
+            builder: (context) => GameOverPage(
+                  players: roomBloc.players,
+                )));
       }
     });
   }
