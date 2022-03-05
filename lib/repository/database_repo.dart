@@ -239,8 +239,19 @@ class DatabaseRepository {
 
         return false;
       } else {
-        await db.doc('/rooms/$roomId/players/${player.id}').set(player.toMap());
-        return true;
+        if ((room.data() as Map)["gameOn"]) {
+          roomBloc
+            ..add(RoomEventError(
+                error: "room mat9drch tdkhollha",
+                nextStat: RoomStateJoinRoom()));
+
+          return false;
+        } else {
+          await db
+              .doc('/rooms/$roomId/players/${player.id}')
+              .set(player.toMap());
+          return true;
+        }
       }
     } on FirebaseException catch (e) {
       roomBloc
