@@ -160,14 +160,10 @@ class CentrePage extends StatelessWidget {
                           for (Message message in gameBloc.messages)
                             if (gameBloc.expanded)
                               if (!(state is GameStateLoading))
-                                MessageBox(message: message),
-                          if ((state is GameStateLoading))
-                            Text("We have Wiiiineeeer !\n next round in 7s"),
-                          if ((state is GameStateLoading) &&
-                              (gameBloc.winner != ""))
-                            Text("${gameBloc.winner} won ! "),
-                          if (state is GameStateLoading)
-                            Text("the word was ${gameBloc.lastCurrentWord}"),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: MessageBox(message: message),
+                                ),
                         ],
                       ),
                     ),
@@ -302,7 +298,7 @@ class MessageBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 500),
-      color: Color(0xFFE0E0E0),
+      color: Colors.grey.shade400,
       padding: EdgeInsets.all(4.0),
       width: 200 - 8,
       child: Column(
