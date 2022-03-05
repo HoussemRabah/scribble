@@ -53,12 +53,8 @@ class _GamePageState extends State<GamePage> {
                 gameBloc.draw.addDraw([e.globalPosition], color);
             },
             onPanUpdate: (e) {
-              pointsLimit++;
-              if (gameBloc.myTurn &&
-                  gameBloc.currentWord != "" &&
-                  pointsLimit == 20) {
+              if (gameBloc.myTurn && gameBloc.currentWord != "") {
                 gameBloc.draw.updateDraw(e.globalPosition);
-                pointsLimit = 0;
               }
             },
             onPanEnd: (e) {
@@ -118,16 +114,13 @@ class ButtomBar extends StatelessWidget {
                                 child: MaterialColorPicker(
                                   allowShades: false,
                                   onMainColorChange: (c) {
-                                    print("test");
-                                  },
-                                  onColorChange: (newColor) {
-                                    color = newColor;
-                                    print(color);
+                                    if (c != null)
+                                      color = Color.fromARGB(
+                                          255, c.red, c.green, c.blue);
                                   },
                                 ),
                               ));
                     }
-                    ;
                   },
                   child: Icon(Icons.color_lens)),
               Icon(Icons.add),
@@ -430,11 +423,13 @@ class Painter extends CustomPainter {
   Painter(this.draw);
   @override
   void paint(Canvas canvas, Size size) {
+    Paint paint = Paint();
+    paint.strokeWidth = 5.0;
     int index = 0;
     for (List<Offset> pack in draw.points) {
-      for (int i = 0; i < pack.length - 20; i = i + 20) {
+      for (int i = 0; i < pack.length - 10; i = i + 10) {
         canvas.drawLine(
-            pack[i], pack[i + 20], Paint()..color = draw.colors[index]);
+            pack[i], pack[i + 10], paint..color = draw.colors[index]);
       }
       index++;
     }
