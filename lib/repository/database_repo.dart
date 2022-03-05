@@ -7,6 +7,7 @@ import 'package:scribble/module/Draw.dart';
 import 'package:scribble/module/message.dart';
 import 'package:scribble/module/player.dart';
 import 'package:scribble/module/round.dart';
+import 'package:scribble/sys.dart';
 
 class DatabaseRepository {
   Future<List<Message>> getMessages(String roomId) async {
@@ -97,6 +98,14 @@ class DatabaseRepository {
     });
   }
 
+  generateWords(String roomId) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    await db.doc("/rooms/$roomId/").update({
+      'words': getGeneratedWords(),
+    });
+  }
+
   setWord(String roomId, String word) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -170,6 +179,8 @@ class DatabaseRepository {
 
     await db.doc("/rooms/$roomId/").update(
         {'currentPlayer': playerIndex, "timeBegin": null, "currentWord": ""});
+
+    await generateWords(roomId);
   }
 
   nextRound(String roomId, int currentRound) async {

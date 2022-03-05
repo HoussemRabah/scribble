@@ -103,6 +103,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       }
       if (event is GameEventNextPlayer) {
         currentPlayer++;
+
         if (currentPlayer >= roomBloc.players.length) {
           currentPlayer = 0;
           await database.nextPlayer(roomBloc.roomId!, currentPlayer);

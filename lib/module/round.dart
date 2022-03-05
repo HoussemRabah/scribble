@@ -1,3 +1,5 @@
+import 'package:scribble/sys.dart';
+
 class Round {
   String creatorId;
   int roundsNumber;
@@ -10,7 +12,7 @@ class Round {
       "gameOn": false,
       "currentRound": 1,
       "currentPlayer": 0,
-      "listOfWords": ["h", "h", "h"],
+      "listOfWords": getGeneratedWords(),
       "currentWord": "",
       "winner": "",
       "timeBegin": null,
@@ -25,7 +27,6 @@ class Round {
       "gameOn": true,
       "currentRound": 1,
       "currentPlayer": 0,
-      "listOfWords": ["h", "h", "h"],
       "currentWord": "",
       "winner": "",
       "timeBegin": null,
