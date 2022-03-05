@@ -61,10 +61,14 @@ class _GamePageState extends State<GamePage> {
               if (gameBloc.myTurn && gameBloc.currentWord != "")
                 gameBloc..add(GameEventPaintChange());
             },
-            child: CustomPaint(
-              size: Size(MediaQuery.of(context).size.width,
-                  MediaQuery.of(context).size.height - 30),
-              painter: Painter(gameBloc.draw),
+            child: BlocBuilder<GameBloc, GameState>(
+              builder: (context, state) {
+                return CustomPaint(
+                  size: Size(MediaQuery.of(context).size.width,
+                      MediaQuery.of(context).size.height - 30),
+                  painter: Painter(gameBloc.draw),
+                );
+              },
             ),
           ),
           Column(children: [HighBar(), CentrePage(), ButtomBar()])
