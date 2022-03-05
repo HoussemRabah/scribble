@@ -1,8 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:firebase/firebase.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:scribble/UI/pages/gamePage.dart';
 import 'package:scribble/UI/pages/home.dart';
 import 'package:scribble/module/player.dart';

@@ -1,10 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:scribble/UI/pages/avatarPage.dart';
-import 'package:scribble/module/player.dart';
 import 'package:scribble/repository/auth_repo.dart';
 import 'package:scribble/repository/storage_repo.dart';
 import 'package:scribble/sys.dart';
