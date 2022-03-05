@@ -7,7 +7,7 @@ class StorageRepository {
     SharedPreferences storageDb = await SharedPreferences.getInstance();
     await Future.delayed(Duration(milliseconds: 2000));
     username = storageDb.getString("user");
-
+    print(username);
     return storageDb.getString("user");
   }
 

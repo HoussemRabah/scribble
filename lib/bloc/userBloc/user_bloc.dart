@@ -32,7 +32,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         if (userName == null) {
           emit(UserStateWriteName());
         } else {
-          emit(UserStateLoadedSigned(username: userName ?? getDefaultName()));
+          await Future.delayed(Duration(milliseconds: 1000));
+          emit(UserStateLoading(process: 1.0));
+
+          Navigator.of(context!).pushReplacement(
+              MaterialPageRoute(builder: (context) => AvatarPage()));
         }
       }
 
