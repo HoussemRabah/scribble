@@ -14,10 +14,16 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-UserBloc userBloc = new UserBloc();
-RoomBloc roomBloc = new RoomBloc();
+UserBloc userBloc = UserBloc();
+RoomBloc roomBloc = RoomBloc();
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

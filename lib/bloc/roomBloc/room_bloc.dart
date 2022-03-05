@@ -23,6 +23,11 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     on<RoomEvent>((event, emit) async {
       if (event is RoomEventInit) {
         context = (event as RoomEventInit).context;
+        players = [];
+        error = "";
+        roomId = null;
+        iamTheCreator = true;
+        rounds = 1;
       }
 
       if (event is RoomEventIncRounds) {
