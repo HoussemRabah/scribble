@@ -11,6 +11,7 @@ import 'package:scribble/constants.dart';
 import 'package:scribble/module/Draw.dart';
 import 'package:scribble/module/message.dart';
 import 'package:scribble/module/player.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 
 import 'home.dart';
 
@@ -97,7 +98,16 @@ class ButtomBar extends StatelessWidget {
               Icon(Icons.architecture_sharp),
               GestureDetector(
                   onTap: () {
-                    if (gameBloc.myTurn) {}
+                    if (gameBloc.myTurn) {
+                      showDialog(
+                          context: context,
+                          builder: (context) => MaterialColorPicker(
+                                allowShades: false,
+                                onColorChange: (newColor) {
+                                  color = newColor;
+                                },
+                              ));
+                    }
                     ;
                   },
                   child: Icon(Icons.color_lens)),
