@@ -15,7 +15,7 @@ class Draw {
   }
 
   undoDraw() {
-    points.removeLast();
+    if (points.isNotEmpty) points.removeLast();
   }
 
   removeDraw() {

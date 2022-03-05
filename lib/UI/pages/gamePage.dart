@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:painter2/painter2.dart';
 import 'package:scribble/UI/widgets/buttons.dart';
+import 'package:scribble/UI/widgets/decor.dart';
 import 'package:scribble/bloc/game/game_bloc.dart';
 import 'package:scribble/bloc/roomBloc/room_bloc.dart';
 import 'package:scribble/constants.dart';
@@ -79,28 +80,33 @@ class ButtomBar extends StatelessWidget {
     return Container(
       color: Color(0xFFE5E5E5),
       height: 60,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          GestureDetector(
-              onTap: () {
-                if (gameBloc.myTurn) gameBloc.draw.removeDraw();
-              },
-              child: Icon(Icons.remove)),
-          GestureDetector(
-              onTap: () {
-                if (gameBloc.myTurn) gameBloc.draw.undoDraw();
-              },
-              child: Icon(Icons.arrow_left)),
-          Icon(Icons.architecture_sharp),
-          GestureDetector(
-              onTap: () {
-                if (gameBloc.myTurn) {}
-                ;
-              },
-              child: Icon(Icons.color_lens)),
-          Icon(Icons.add),
-        ],
+      child: Cadre(
+        child: Container(
+          color: Color(0xFFE5E5E5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                  onTap: () {
+                    if (gameBloc.myTurn) gameBloc.draw.removeDraw();
+                  },
+                  child: Icon(Icons.remove)),
+              GestureDetector(
+                  onTap: () {
+                    if (gameBloc.myTurn) gameBloc.draw.undoDraw();
+                  },
+                  child: Icon(Icons.arrow_left)),
+              Icon(Icons.architecture_sharp),
+              GestureDetector(
+                  onTap: () {
+                    if (gameBloc.myTurn) {}
+                    ;
+                  },
+                  child: Icon(Icons.color_lens)),
+              Icon(Icons.add),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -124,12 +130,17 @@ class CentrePage extends StatelessWidget {
                   width: 60,
                   height: MediaQuery.of(context).size.height - 30 - 60,
                   color: Color(0xFFE5E5E5),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        for (Player player in roomBloc.players)
-                          PlayerContainer(player: player),
-                      ],
+                  child: Cadre(
+                    child: Container(
+                      color: Color(0xFFE5E5E5),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            for (Player player in roomBloc.players)
+                              PlayerContainer(player: player),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 );
@@ -243,10 +254,15 @@ class PlayerContainer extends StatelessWidget {
               ? Colors.blueAccent
               : Colors.transparent,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 numberFormat(player.totalScore),
                 style: textStyleError,
+              ),
+              SizedBox(
+                height: 8.0,
               ),
               SvgPicture.asset(
                 player.avatar,
@@ -254,9 +270,20 @@ class PlayerContainer extends StatelessWidget {
                 fit: BoxFit.fitWidth,
                 width: 50,
               ),
-              Text(
-                player.name,
-                style: textStyleError,
+              SizedBox(
+                height: 8.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 1.0, right: 1.0),
+                child: Text(
+                  player.name,
+                  textAlign: TextAlign.center,
+                  style: textStyleSmall
+                      .copyWith(color: colorMain, fontSize: 10.0, shadows: []),
+                ),
+              ),
+              SizedBox(
+                height: 8.0,
               ),
             ],
           ),
@@ -276,9 +303,11 @@ class MessageBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: colorFront,
-      padding: EdgeInsets.all(2.0),
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      color: Color(0xFFE0E0E0),
+      padding: EdgeInsets.all(4.0),
+      width: 200 - 8,
       child: Column(
         children: [
           Text(
@@ -287,7 +316,7 @@ class MessageBox extends StatelessWidget {
           ),
           Text(
             message.content,
-            style: textStyleSmall.copyWith(color: Colors.white),
+            style: textStyleSmall.copyWith(color: Colors.white, shadows: []),
           ),
         ],
       ),
@@ -305,22 +334,46 @@ class HighBar extends StatelessWidget {
     return BlocBuilder<GameBloc, GameState>(
       builder: (context, state) {
         return Container(
+          padding: EdgeInsets.fromLTRB(2.0, 0, 2.0, 0),
           height: 30,
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  child: Text(
-                    "round ${gameBloc.currentRound}",
-                    style: textStyleSmall.copyWith(color: Colors.black),
-                  ),
-                ),
-                Icon(Icons.home),
-                if (gameBloc.beginTime != null)
-                  Container(child: new Counter(time: gameBloc.beginTime!)),
-                if (gameBloc.beginTime == null) Text('wait...'),
-              ]),
+          color: Colors.white,
+          child: Cadre(
+            child: Container(
+              color: Colors.white,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Cadre(
+                      child: Container(
+                        padding: EdgeInsets.all(2.0),
+                        color: Colors.white,
+                        child: Text(
+                          "round ${gameBloc.currentRound}",
+                          style: textStyleSmall
+                              .copyWith(color: Colors.black, shadows: []),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) => Home()));
+                        },
+                        child: Icon(Icons.home)),
+                    Cadre(
+                        child: Container(
+                            padding: EdgeInsets.all(2.0),
+                            color: Colors.white,
+                            child: (gameBloc.beginTime != null)
+                                ? new Counter(time: gameBloc.beginTime!)
+                                : Text(
+                                    "80",
+                                    style: textStyleSmall,
+                                  ))),
+                  ]),
+            ),
+          ),
         );
       },
     );
@@ -339,6 +392,7 @@ class Counter extends StatelessWidget {
         },
         format: CountDownTimerFormat.secondsOnly,
         enableDescriptions: false,
+        timeTextStyle: textStyleSmall,
         endTime: time.toDate().add(Duration(seconds: 80)));
   }
 }
