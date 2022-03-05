@@ -8,7 +8,6 @@ class StorageRepository {
     await Future.delayed(Duration(milliseconds: 2000));
     username = storageDb.getString("user");
 
-    storageDb.remove("user");
     return storageDb.getString("user");
   }
 
