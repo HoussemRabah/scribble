@@ -33,7 +33,8 @@ class _HomeState extends State<Home> {
             BlocProvider.value(
               value: userBloc..add(UserEventInit(context: context)),
             ),
-            BlocProvider.value(value: roomBloc),
+            BlocProvider.value(
+                value: roomBloc..add(RoomEventInit(context: context))),
           ],
           child: BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
