@@ -23,6 +23,7 @@ class GamePage extends StatefulWidget {
 }
 
 Color color = Colors.black;
+int pointsLimit = 0;
 
 GameBloc gameBloc = GameBloc();
 TextEditingController? _controller = TextEditingController();
@@ -52,8 +53,13 @@ class _GamePageState extends State<GamePage> {
                 gameBloc.draw.addDraw([e.globalPosition], color);
             },
             onPanUpdate: (e) {
-              if (gameBloc.myTurn && gameBloc.currentWord != "")
+              pointsLimit++;
+              if (gameBloc.myTurn &&
+                  gameBloc.currentWord != "" &&
+                  pointsLimit == 20) {
                 gameBloc.draw.updateDraw(e.globalPosition);
+                pointsLimit = 0;
+              }
             },
             onPanEnd: (e) {
               if (gameBloc.myTurn && gameBloc.currentWord != "")
@@ -111,6 +117,9 @@ class ButtomBar extends StatelessWidget {
                           builder: (context) => Dialog(
                                 child: MaterialColorPicker(
                                   allowShades: false,
+                                  onMainColorChange: (c) {
+                                    print("test");
+                                  },
                                   onColorChange: (newColor) {
                                     color = newColor;
                                     print(color);
@@ -362,7 +371,7 @@ class HighBar extends StatelessWidget {
                         padding: EdgeInsets.all(2.0),
                         color: Colors.white,
                         child: Text(
-                          "round ${gameBloc.currentRound}",
+                          "round ${gameBloc.currentRound + 1}",
                           style: textStyleSmall
                               .copyWith(color: Colors.black, shadows: []),
                         ),
@@ -423,9 +432,9 @@ class Painter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     int index = 0;
     for (List<Offset> pack in draw.points) {
-      for (int i = 0; i < pack.length - 10; i = i + 10) {
+      for (int i = 0; i < pack.length - 20; i = i + 20) {
         canvas.drawLine(
-            pack[i], pack[i + 10], Paint()..color = draw.colors[index]);
+            pack[i], pack[i + 20], Paint()..color = draw.colors[index]);
       }
       index++;
     }
