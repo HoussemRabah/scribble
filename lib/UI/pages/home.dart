@@ -14,8 +14,8 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-UserBloc userBloc = UserBloc();
-RoomBloc roomBloc = RoomBloc();
+UserBloc userBloc = new UserBloc();
+RoomBloc roomBloc = new RoomBloc();
 
 class _HomeState extends State<Home> {
   @override

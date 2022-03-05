@@ -144,8 +144,8 @@ class CentrePage extends StatelessWidget {
                 );
               },
             ),
-            AnimatedContainer(
-              duration: Duration(milliseconds: 500),
+            Container(
+              //  duration: Duration(milliseconds: 500),
               color: Color(0xFFE5E5E5),
               width:
                   (gameBloc.expanded && gameBloc.currentWord != "") ? 200 : 0,
@@ -248,7 +248,7 @@ class PlayerContainer extends StatelessWidget {
         return Container(
           width: 60.0,
           color: (roomBloc.players[gameBloc.currentPlayer].id == player.id)
-              ? Colors.blueAccent
+              ? Colors.blue.shade100
               : Colors.transparent,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -331,11 +331,11 @@ class HighBar extends StatelessWidget {
     return BlocBuilder<GameBloc, GameState>(
       builder: (context, state) {
         return Container(
-          padding: EdgeInsets.fromLTRB(2.0, 0, 2.0, 0),
           height: 30,
           color: Colors.white,
           child: Cadre(
             child: Container(
+              padding: EdgeInsets.fromLTRB(2.0, 0, 2.0, 0),
               color: Colors.white,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
