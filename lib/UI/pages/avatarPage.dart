@@ -87,19 +87,11 @@ class JoinView extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: () {
+          child: Button(
+            function: () {
               roomBloc..emit(RoomInitial());
             },
-            child: Cadre(
-              child: Container(
-                color: colorBack,
-                width: 80,
-                height: 50,
-                padding: EdgeInsets.all(8.0),
-                child: Center(child: Icon(Icons.arrow_left)),
-              ),
-            ),
+            text: 'exit',
           ),
         )
       ],

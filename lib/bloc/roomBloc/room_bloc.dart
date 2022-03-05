@@ -107,10 +107,11 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         emit(event.nextStat);
       }
       if (event is RoomEventStartTheGame) {
-        database.startTheGame(
-          roomId!,
-          Round(creatorId: userBloc.user!.user!.uid, roundsNumber: rounds),
-        );
+        if (players.length > 1)
+          database.startTheGame(
+            roomId!,
+            Round(creatorId: userBloc.user!.user!.uid, roundsNumber: rounds),
+          );
       }
     });
   }
