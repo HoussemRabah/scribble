@@ -10,6 +10,8 @@ class RoomEventInit extends RoomEvent {
 
 class RoomEventIncRounds extends RoomEvent {}
 
+class RoomEventExit extends RoomEvent {}
+
 class RoomEventDicRounds extends RoomEvent {}
 
 class RoomEventNewRoom extends RoomEvent {}

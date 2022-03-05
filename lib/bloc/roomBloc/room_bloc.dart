@@ -67,6 +67,10 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         Navigator.of(context!).pushReplacement(
             MaterialPageRoute(builder: (context) => GamePage()));
       }
+      if (event is RoomEventExit) {
+        database.exitplayer(roomId!);
+        emit(RoomInitial());
+      }
 
       if (event is RoomEventJoinRoomStart) {
         emit(RoomStateLoading(process: 0.1));

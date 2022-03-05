@@ -139,7 +139,6 @@ class DatabaseRepository {
     FirebaseFirestore db = FirebaseFirestore.instance;
     QuerySnapshot playersSnapshot =
         await db.collection("/rooms/$roomId/players/").get();
-    print("/rooms/$roomId/players/");
     for (QueryDocumentSnapshot player in playersSnapshot.docs) {
       if (player.data() != null) {
         players.add(playerFromMap(player.data() as Map));
@@ -147,6 +146,12 @@ class DatabaseRepository {
     }
 
     return players;
+  }
+
+  exitplayer(String roomId) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    await db.doc("/rooms/$roomId/players/${userBloc.user!.user!.uid}").delete();
   }
 
   addPlayerScore(
@@ -229,6 +234,13 @@ class DatabaseRepository {
 
   Future<bool> joinRoom(String roomId, Player player) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
+    if (roomId.isEmpty) {
+      roomBloc
+        ..add(RoomEventError(
+            error: "aktab 3afsa omba3d dir ok", nextStat: RoomStateJoinRoom()));
+
+      return false;
+    }
     try {
       DocumentSnapshot? room =
           await db.collection('/rooms/').doc("$roomId/").get();

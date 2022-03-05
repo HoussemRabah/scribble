@@ -142,7 +142,7 @@ class NewRoomView extends StatelessWidget {
         Button(
             text: "exit",
             function: () {
-              roomBloc..emit(RoomInitial());
+              roomBloc..add(RoomEventExit());
             })
       ],
     );

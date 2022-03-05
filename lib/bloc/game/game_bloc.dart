@@ -66,7 +66,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         } else {
           myTurn = false;
           draw = await database.getDraw(roomBloc.roomId!);
-          print("not my");
         }
         currentWord = (await database.getCurrentWord(roomBloc.roomId!));
         emit(GameInitial());
