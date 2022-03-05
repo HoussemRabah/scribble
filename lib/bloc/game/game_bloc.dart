@@ -59,7 +59,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       if (event is GameEventRefresh) {
         //get data from the listen
         messages = await database.getMessages(roomBloc.roomId!);
-        currentRound = await database.getCurrentRound(roomBloc.roomId!);
         winner = await database.getWinner(roomBloc.roomId!);
         beginTime = await database.getTimeBegin(roomBloc.roomId!);
         currentPlayer = await database.getCurrentPlayer(roomBloc.roomId!);
@@ -115,6 +114,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       if (event is GameEventNextPlayer) {
         currentPlayer++;
         draw = Draw(points: [], colors: []);
+        add(GameEventPaintChange());
         if (currentPlayer >= roomBloc.players.length) {
           currentPlayer = 0;
           await database.nextPlayer(roomBloc.roomId!, currentPlayer);

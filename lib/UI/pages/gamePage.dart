@@ -61,14 +61,10 @@ class _GamePageState extends State<GamePage> {
               if (gameBloc.myTurn && gameBloc.currentWord != "")
                 gameBloc..add(GameEventPaintChange());
             },
-            child: BlocBuilder<GameBloc, GameState>(
-              builder: (context, state) {
-                return CustomPaint(
-                  size: Size(MediaQuery.of(context).size.width,
-                      MediaQuery.of(context).size.height - 30),
-                  painter: Painter(gameBloc.draw),
-                );
-              },
+            child: CustomPaint(
+              size: Size(MediaQuery.of(context).size.width,
+                  MediaQuery.of(context).size.height - 30),
+              painter: Painter(gameBloc.draw),
             ),
           ),
           Column(children: [HighBar(), CentrePage(), ButtomBar()])
@@ -424,7 +420,8 @@ class Painter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint();
-    paint.strokeWidth = 5.0;
+    paint.strokeWidth = 2.0;
+
     int index = 0;
     for (List<Offset> pack in draw.points) {
       for (int i = 0; i < pack.length - 10; i = i + 10) {
